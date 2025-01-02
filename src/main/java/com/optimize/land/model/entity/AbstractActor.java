@@ -1,17 +1,17 @@
 package com.optimize.land.model.entity;
 
 import com.optimize.common.entities.entity.Auditable;
-import com.optimize.land.model.enumeration.MaritalStatus;
+import com.optimize.common.entities.exception.CustomValidationException;
+import com.optimize.land.model.enumeration.ActorType;
 import com.optimize.land.model.enumeration.RegistrationStatus;
 import com.optimize.land.model.enumeration.RoleActor;
-import com.optimize.land.model.enumeration.Sex;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,115 +22,19 @@ public abstract class AbstractActor extends Auditable<String> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "actorSequenceGenerator")
     protected Long id;
-    //@NotNull
-    @Size(min = 2, max = 25)
-    @Column(name = "lastname", length = 25, nullable = false)
-    protected String lastname;
 
-    //@NotNull
-    @Size(min = 2, max = 55)
-    @Column(name = "firstname", length = 55, nullable = false)
-    protected String firstname;
+    @OneToOne
+    protected Person physicalPerson;
+    @OneToOne
+    protected InformalGroup informalGroup;
+    @OneToOne
+    protected PrivateLegalEntity privateLegalEntity;
+    @OneToOne
+    protected PublicLegalEntity publicLegalEntity;
 
-    //@NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "sex", nullable = false)
-    protected Sex sex;
-
-    //@NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "marital_status", nullable = false)
-    protected MaritalStatus maritalStatus;
-
-    //@NotNull
-    @Column(name = "birth_date", nullable = false)
-    protected LocalDate birthDate;
-
-    //@NotNull
-    @Size(min = 2, max = 60)
-    @Column(name = "place_of_birth", length = 60, nullable = false)
-    protected String placeOfBirth;
-
-    //@NotNull
-    @Size(min = 2, max = 60)
-    @Column(name = "nationality", length = 60, nullable = false)
-    protected String nationality;
-
-    @Column(name = "profession")
-    protected String profession;
-
-    @Column(name = "other_profession")
-    protected String otherProfession;
-
-    //@NotNull
-    @Size(min = 2, max = 70)
-    @Column(name = "address", length = 70, nullable = false)
-    protected String address;
-
-    //@NotNull
-    @Size(min = 8, max = 11)
-    @Column(name = "primary_phone", length = 11, nullable = false)
-    protected String primaryPhone;
-
-    @Size(min = 8, max = 11)
-    @Column(name = "secondary_phone", length = 11)
-    protected String secondaryPhone;
-
-    //@NotNull
-    @Column(name = "email", nullable = false)
-    protected String email;
-
-    @Column(name = "has_handicap")
-    protected Boolean hasHandicap;
-
-    @Column(name = "socio_cultural_group")
-    protected String socioCulturalGroup;
-
-    @Column(name = "handicap_type")
-    protected String handicapType;
-
-    @Column(name = "other_handicap_type")
-    protected String otherHandicapType;
-
-    @Column(name = "first_fingerprint")
-    protected String firstFingerprint;
-
-    @Column(name = "second_fingerprint")
-    protected String secondFingerprint;
-
-    @Column(name = "third_fingerprint")
-    protected String thirdFingerprint;
-
-    @Column(name = "first_finger_name")
-    protected String firstFingerName;
-
-    @Column(name = "second_finger_name")
-    protected String secondFingerName;
-
-    @Column(name = "third_finger_name")
-    protected String thirdFingerName;
-
-    @Column(name = "has_id_doc")
-    protected Boolean hasIDDoc;
-
-    @Column(name = "identification_doc_type")
-    protected String identificationDocType;
-
-    @Column(name = "other_identification_doc_type")
-    protected String otherIdentificationDocType;
-
-    @Column(name = "identification_doc_number")
-    protected String identificationDocNumber;
-
-    @Lob
-    @Column(name = "identification_doc_photo")
-    protected byte[] identificationDocPhoto;
-
-    @Column(name = "identification_doc_photo_content_type")
-    protected String identificationDocPhotoContentType;
-
-    @Column(name = "witness_uin")
-    protected String witnessUIN;
+    @Size(min = 10, max = 15)
+    @Column(name = "uin", length = 15, unique = true)
+    private String uin;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -151,4 +55,42 @@ public abstract class AbstractActor extends Auditable<String> {
 
     @Enumerated(EnumType.STRING)
     protected RoleActor role;
+
+    @Enumerated(EnumType.STRING)
+    protected ActorType type;
+    @OneToMany
+    protected Set<FingerprintStore> fingerprintStores;
+
+    private void validateUniqueActorType () {
+            int nonNullCount = 0;
+
+            if (physicalPerson != null) nonNullCount++;
+            if (informalGroup != null) nonNullCount++;
+            if (privateLegalEntity != null) nonNullCount++;
+            if (publicLegalEntity != null) nonNullCount++;
+
+            if (nonNullCount > 1) {
+                throw new CustomValidationException("Only one attribute can be non-null. Found multiple non-null attributes in ['physicalPerson', 'informalGroup', 'privateLegalEntity', 'publicLegalEntity'].");
+            }
+
+        if (physicalPerson != null) {
+            type = ActorType.PHYSICAL_PERSON;
+        } else if (informalGroup != null) {
+            type = ActorType.INFORMAL_GROUP;
+        } else if (privateLegalEntity != null) {
+            type = ActorType.PRIVATE_LEGAL_ENTITY;
+        } else if (publicLegalEntity != null) {
+            type = ActorType.PUBLIC_LEGAL_ENTITY;
+        }
+    }
+
+    public void updateFingerprint() {
+        fingerprintStores.forEach(fs -> fs.setActor(this));
+    }
+
+    public void addRid(String rid) {
+        this.rid = rid;
+        this.registrationStatus = RegistrationStatus.PENDING;
+        fingerprintStores.forEach(fs -> fs.setRid(rid));
+    }
 }

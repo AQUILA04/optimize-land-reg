@@ -1,5 +1,6 @@
 package com.optimize.land.model.entity;
 
+import com.optimize.common.entities.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class CheckListOperation implements Serializable {
+public class CheckListOperation extends BaseEntity<String> {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,0 +1,40 @@
+package com.optimize.land.model.dto;
+
+import com.optimize.land.model.enumeration.ConflictParty;
+import lombok.Data;
+
+import java.time.LocalDate;
+
+@Data
+public class ConflictDto {
+    private Long id;
+    private ConflictParty conflictParty;
+    private String firstConflictPartyNUP;
+    private String firstConflictPartyOccupationDurationInMonth;
+    private String secondConflictPartyNUP;
+    private String secondConflictPartyOccupationDurationInMonth;
+    private String conflictObject;
+    private String rightClaimed;
+    private String rightClaimedOrigin;
+    /**
+     * Institution saisie
+     */
+    private String institutionInvolved;
+    /**
+     * Preuve de la saisine
+     */
+    private String seizureProof;
+    private String exhibitAndEvidence;
+    private String photoOfProof;
+    private String procedureStatus;
+    private LocalDate settlementDate;
+    private String settlementCompromiseNature;
+    private String settlementActor;
+    private String regulationWitnesses;
+    private String finalDecisionProof;
+    private String settlementProofPhoto;
+    private String rightRestrictionType;
+    private String currentlyUseFor;
+    private String agriculturalDevelopmentType;
+    private String pointOfAttention;
+}

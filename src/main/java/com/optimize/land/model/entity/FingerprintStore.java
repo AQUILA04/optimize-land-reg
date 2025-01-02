@@ -40,4 +40,7 @@ public class FingerprintStore extends Auditable<String> {
 
     @Column(name = "fingerprint_image_content_type")
     private String fingerprintImageContentType;
+
+    @ManyToOne
+    private AbstractActor actor;
 }
