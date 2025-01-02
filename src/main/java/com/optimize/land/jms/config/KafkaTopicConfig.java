@@ -21,4 +21,9 @@ public class KafkaTopicConfig {
     public NewTopic afisMatcherResultTopic() {
         return new NewTopic("afis-matcher-result-topic", 3, (short) 2);
     }
+
+    @Bean
+    public NewTopic afisMasterFeedbackTopic() {
+        return new NewTopic("afis-master-feedback-topic", 3, (short) 2);
+    }
 }

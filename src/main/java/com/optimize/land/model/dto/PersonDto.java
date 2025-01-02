@@ -3,6 +3,7 @@ package com.optimize.land.model.dto;
 import com.optimize.land.model.enumeration.MaritalStatus;
 import com.optimize.land.model.enumeration.RegistrationStatus;
 import com.optimize.land.model.enumeration.Sex;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -22,29 +23,27 @@ public class PersonDto {
     protected MaritalStatus maritalStatus;
     @NotNull(message = "actor.person.birth-date.mandatory")
     protected LocalDate birthDate;
-    @NotNull
+    @NotBlank(message = "actor.person.place-of-birth.mandatory")
     protected String placeOfBirth;
-    @NotNull
+    @NotBlank(message = "actor.person.nationality.mandatory")
     protected String nationality;
+    @NotBlank(message = "actor.person.profession.mandatory")
     protected String profession;
     protected String otherProfession;
-    @NotNull
+    @NotBlank(message = "actor.person.address.mandatory")
     protected String address;
-    @NotNull
+    @NotBlank(message = "actor.person.primary-phone.mandatory")
     protected String primaryPhone;
     protected String secondaryPhone;
-    @NotNull
+    @NotBlank(message = "actor.person.email.mandatory")
+    @Email
     protected String email;
-    protected Boolean hasHandicap;
+
+    protected Boolean hasHandicap = Boolean.FALSE;
+    @NotBlank(message = "actor.person.socio-cultural-group.mandatory")
     protected String socioCulturalGroup;
     protected String handicapType;
     protected String otherHandicapType;
-    protected String firstFingerprint;
-    protected String secondFingerprint;
-    protected String thirdFingerprint;
-    protected String firstFingerName;
-    protected String secondFingerName;
-    protected String thirdFingerName;
     protected Boolean hasIDDoc;
     protected String identificationDocType;
     protected String otherIdentificationDocType;

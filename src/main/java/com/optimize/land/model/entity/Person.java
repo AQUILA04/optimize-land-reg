@@ -34,6 +34,10 @@ public class Person extends Auditable<String> {
     @Column(name = "sex", nullable = false)
     protected Sex sex;
 
+    @Size(min = 10, max = 15)
+    @Column(name = "uin", length = 15, unique = true)
+    protected String uin;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "marital_status", nullable = false)
@@ -88,25 +92,6 @@ public class Person extends Auditable<String> {
 
     @Column(name = "other_handicap_type")
     protected String otherHandicapType;
-
-    @Column(name = "first_fingerprint")
-    protected String firstFingerprint;
-
-    @Column(name = "second_fingerprint")
-    protected String secondFingerprint;
-
-    @Column(name = "third_fingerprint")
-    protected String thirdFingerprint;
-
-    @Column(name = "first_finger_name")
-    protected String firstFingerName;
-
-    @Column(name = "second_finger_name")
-    protected String secondFingerName;
-
-    @Column(name = "third_finger_name")
-    protected String thirdFingerName;
-
     @Column(name = "has_id_doc")
     protected Boolean hasIDDoc;
 

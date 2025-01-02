@@ -34,7 +34,7 @@ public abstract class AbstractActor extends Auditable<String> {
 
     @Size(min = 10, max = 15)
     @Column(name = "uin", length = 15, unique = true)
-    private String uin;
+    protected String uin;
 
     @NotNull
     @Enumerated(EnumType.STRING)
