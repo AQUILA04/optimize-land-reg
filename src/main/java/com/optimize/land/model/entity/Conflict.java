@@ -47,6 +47,8 @@ public class Conflict extends Auditable<String> {
     private String currentlyUseFor;
     private String agriculturalDevelopmentType;
     private String pointOfAttention;
+    @OneToOne(mappedBy = "conflict")
+    private Finding finding;
 
 
 

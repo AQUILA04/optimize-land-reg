@@ -5,7 +5,7 @@ spring:
     active: local
   docker:
     compose:
-      enabled: false
+      enabled: true
   kafka:
     bootstrap-servers: localhost:9092
     producer:

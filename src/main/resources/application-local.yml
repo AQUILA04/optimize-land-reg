@@ -35,7 +35,7 @@ logging:
           filter:
             CommonsRequestLoggingFilter: DEBUG
   file:
-    path: ${user.home}/.${spring.application.name}/logs/
+    path: ${user.home}\.${spring.application.name}\logs
 
 
 management:

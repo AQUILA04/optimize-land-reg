@@ -1,10 +1,13 @@
 package com.optimize.land.model.entity;
 
+import com.optimize.common.entities.annotations.ExistsInDB;
+import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import com.optimize.common.entities.entity.Auditable;
 import com.optimize.land.model.enumeration.MaritalStatus;
 import com.optimize.land.model.enumeration.RegistrationStatus;
 import com.optimize.land.model.enumeration.Sex;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -15,6 +18,10 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
+@Table(uniqueConstraints = {@UniqueConstraint(
+        columnNames = {"lastname", "firstname", "sex", "marital_status", "birth_date",
+                "place_of_birth", "nationality", "profession", "address", "primary_phone", "email"},
+        name = "person_unique_constraint")})
 public class Person extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,15 +77,18 @@ public class Person extends Auditable<String> {
 
     @NotNull
     @Size(min = 8, max = 11)
-    @Column(name = "primary_phone", length = 11, nullable = false)
+    @Column(name = "primary_phone", length = 11, nullable = false, unique = true)
+    @ValidPhoneNumber
     protected String primaryPhone;
 
     @Size(min = 8, max = 11)
-    @Column(name = "secondary_phone", length = 11)
+    @Column(name = "secondary_phone", length = 11, unique = true)
+    @ValidPhoneNumber
     protected String secondaryPhone;
 
     @NotNull
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
+    @Email
     protected String email;
 
     @Column(name = "has_handicap")
@@ -112,6 +122,7 @@ public class Person extends Auditable<String> {
     protected String identificationDocPhotoContentType;
 
     @Column(name = "witness_uin")
+    @ExistsInDB(entity = Actor.class, field = "uin", message = "le NIU du témoin n'existe pas !")
     protected String witnessUIN;
 
     @NotNull
@@ -122,12 +133,12 @@ public class Person extends Auditable<String> {
     @Column(name = "status_observation")
     protected String statusObservation;
 
-    @Column(name = "rid")
+    @Column(name = "rid", unique = true)
     protected String rid;
 
     @Column(name = "synchro_batch_number")
     protected String synchroBatchNumber;
 
-    @Column(name = "synchro_packet_number")
+    @Column(name = "synchro_packet_number", unique = true)
     protected String synchroPacketNumber;
 }

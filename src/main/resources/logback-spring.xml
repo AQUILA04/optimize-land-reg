@@ -24,9 +24,9 @@
 
     <!-- Appender to log to file in a JSON format -->
     <appender name="AppEventRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logFolder}/app-event.json</file>
+        <file>${logFolder}\app-event.json</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logFolder}/ac-event.json.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>${logFolder}\ac-event.json.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <maxHistory>7</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFileNamingAndTriggeringPolicy">
                 <maxFileSize>10MB</maxFileSize>
@@ -71,9 +71,9 @@
     </appender>
 
     <appender name="MainRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logFolder}/main.json</file>
+        <file>${logFolder}\main.json</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logFolder}/main.json.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>${logFolder}\main.json.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <maxHistory>7</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFileNamingAndTriggeringPolicy">
                 <maxFileSize>10MB</maxFileSize>

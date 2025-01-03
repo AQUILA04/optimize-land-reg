@@ -1,5 +1,6 @@
 package com.optimize.land.model.dto;
 
+import com.optimize.common.entities.annotations.Base64Image;
 import com.optimize.land.model.enumeration.ConflictParty;
 import lombok.Data;
 
@@ -25,6 +26,7 @@ public class ConflictDto {
      */
     private String seizureProof;
     private String exhibitAndEvidence;
+    @Base64Image
     private String photoOfProof;
     private String procedureStatus;
     private LocalDate settlementDate;
@@ -32,6 +34,7 @@ public class ConflictDto {
     private String settlementActor;
     private String regulationWitnesses;
     private String finalDecisionProof;
+    @Base64Image
     private String settlementProofPhoto;
     private String rightRestrictionType;
     private String currentlyUseFor;

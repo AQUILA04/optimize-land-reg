@@ -1,5 +1,7 @@
 package com.optimize.land.model.dto;
 
+import com.optimize.common.entities.annotations.Base64Image;
+import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import com.optimize.land.model.enumeration.MaritalStatus;
 import com.optimize.land.model.enumeration.RegistrationStatus;
 import com.optimize.land.model.enumeration.Sex;
@@ -33,7 +35,9 @@ public class PersonDto {
     @NotBlank(message = "actor.person.address.mandatory")
     protected String address;
     @NotBlank(message = "actor.person.primary-phone.mandatory")
+    @ValidPhoneNumber
     protected String primaryPhone;
+    @ValidPhoneNumber
     protected String secondaryPhone;
     @NotBlank(message = "actor.person.email.mandatory")
     @Email
@@ -48,6 +52,7 @@ public class PersonDto {
     protected String identificationDocType;
     protected String otherIdentificationDocType;
     protected String identificationDocNumber;
+    @Base64Image
     protected String identificationDocPhoto;
     protected String identificationDocPhotoContentType;
     protected String witnessUIN;

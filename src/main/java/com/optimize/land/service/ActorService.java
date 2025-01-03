@@ -1,19 +1,27 @@
 package com.optimize.land.service;
 
+import com.optimize.common.entities.enums.State;
 import com.optimize.common.entities.service.GenericService;
+import com.optimize.land.client.AfisClient;
 import com.optimize.land.jms.AfisProducer;
 import com.optimize.land.jms.model.AfisMasterRequest;
 import com.optimize.land.jms.model.RegistrationProcessorFeedback;
 import com.optimize.land.model.dto.ActorDto;
+import com.optimize.land.model.dto.BioAuthDto;
 import com.optimize.land.model.entity.*;
+import com.optimize.land.model.enumeration.BioAuthResponse;
 import com.optimize.land.model.enumeration.RegistrationStatus;
 import com.optimize.land.model.mapper.ActorMapper;
 import com.optimize.land.repository.ActorRepository;
 import com.optimize.land.util.UniqueIDGenerator;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 
 @Service
@@ -24,17 +32,20 @@ public class ActorService extends GenericService<AbstractActor, Long> {
     private final FingerprintStoreService fingerprintStoreService;
     private final SynchroHistoryService synchroHistoryService;
     private final AfisProducer afisProducer;
+    private final AfisClient afisClient;
 
     protected ActorService(ActorRepository repository,
                            ActorMapper actorMapper,
                            FingerprintStoreService fingerprintStoreService,
                            SynchroHistoryService synchroHistoryService,
-                           AfisProducer afisProducer) {
+                           AfisProducer afisProducer,
+                           AfisClient afisClient) {
         super(repository);
         this.actorMapper = actorMapper;
         this.fingerprintStoreService = fingerprintStoreService;
         this.synchroHistoryService = synchroHistoryService;
         this.afisProducer = afisProducer;
+        this.afisClient = afisClient;
     }
 
     @Transactional
@@ -93,7 +104,22 @@ public class ActorService extends GenericService<AbstractActor, Long> {
             log.error(e.getLocalizedMessage());
             failed(feedback.getRid(), e.getLocalizedMessage());
         }
+    }
 
+    public Page<AbstractActor> getByStatus(RegistrationStatus status, Pageable pageable) {
+        return getRepository().findByRegistrationStatusAndState(status, State.ENABLED, pageable);
+    }
+
+    public BioAuthResponse bioAuth(BioAuthDto dto) {
+        Actor actor = getRepository().getByUin(dto.getUin());
+        if (Objects.isNull(actor)) {
+            return BioAuthResponse.UIN_NOT_FOUND;
+        }
+        if (!actor.getRole().equals(dto.getRole())) {
+            return BioAuthResponse.ROLE_NOT_MATCH;
+        }
+        dto.setRid(actor.getRid());
+        return afisClient.bioAuthRequest(dto);
     }
 
     public ActorRepository getRepository() {

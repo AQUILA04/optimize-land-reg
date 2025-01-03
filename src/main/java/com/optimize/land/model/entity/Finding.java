@@ -1,14 +1,21 @@
 package com.optimize.land.model.entity;
 
+import com.optimize.common.entities.annotations.ConditionalNotNull;
 import com.optimize.common.entities.entity.Auditable;
 import com.optimize.land.model.enumeration.RoleActor;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@ConditionalNotNull(
+        booleanField = "hasConflict",
+        dependentField = "conflict",
+        message = "Le valeur du conflit est obligatoire lorsque 'hasConflict' est égale à 'true' !"
+)
 public class Finding extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +29,14 @@ public class Finding extends Auditable<String> {
     private RoleActor personType;
     private String uin;
     private Boolean hasConflict;
-    @OneToOne
+    @Valid
+    @OneToOne(cascade = CascadeType.ALL)
     private CheckListOperation firstCheckListOperation;
-    @OneToOne
+    @Valid
+    @OneToOne(cascade = CascadeType.ALL)
     private CheckListOperation lastCheckListOperation;
-    @OneToOne
+    @Valid
+    @OneToOne(cascade = CascadeType.ALL)
     private Conflict conflict;
 
 }

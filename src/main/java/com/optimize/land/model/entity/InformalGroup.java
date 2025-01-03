@@ -1,7 +1,10 @@
 package com.optimize.land.model.entity;
 
+import com.optimize.common.entities.annotations.ExistsInDB;
+import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import com.optimize.common.entities.entity.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -31,7 +34,7 @@ public class InformalGroup extends BaseEntity<String> {
     private String uin;
 
     @NotNull
-    @Column(name = "group_name", nullable = false)
+    @Column(name = "group_name", nullable = false, unique = true)
     private String groupName;
 
     @NotNull
@@ -41,14 +44,17 @@ public class InformalGroup extends BaseEntity<String> {
     @NotNull
     @Size(min = 8, max = 11)
     @Column(name = "phone_number", length = 11, nullable = false, unique = true)
+    @ValidPhoneNumber
     private String phoneNumber;
 
     @Size(min = 8, max = 11)
     @Column(name = "secondary_phone_number", length = 11)
+    @ValidPhoneNumber
     private String secondaryPhoneNumber;
 
     @NotNull
     @Column(name = "email", nullable = false)
+    @Email
     private String email;
 
     @NotNull
@@ -58,6 +64,7 @@ public class InformalGroup extends BaseEntity<String> {
     @NotNull
     @Size(min = 10, max = 15)
     @Column(name = "representative_uin", length = 15, nullable = false)
+    @ExistsInDB(entity = Actor.class, field = "uin", message = "le NIU du premier représentant n'existe pas !")
     private String representativeUIN;
 
     @NotNull
@@ -68,6 +75,7 @@ public class InformalGroup extends BaseEntity<String> {
     @NotNull
     @Size(min = 10, max = 15)
     @Column(name = "secondary_representative_uin", length = 15, nullable = false)
+    @ExistsInDB(entity = Actor.class, field = "uin", message = "le NIU du second représentant n'existe pas !")
     private String secondaryRepresentativeUIN;
 
     @NotNull
@@ -78,6 +86,7 @@ public class InformalGroup extends BaseEntity<String> {
     @NotNull
     @Size(min = 10, max = 15)
     @Column(name = "third_representative_uin", length = 15, nullable = false)
+    @ExistsInDB(entity = Actor.class, field = "uin", message = "le NIU du troisième représentant n'existe pas !")
     private String thirdRepresentativeUIN;
 
     @NotNull

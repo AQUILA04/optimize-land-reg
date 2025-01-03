@@ -1,5 +1,7 @@
 package com.optimize.land.model.dto;
 
+import com.optimize.common.entities.annotations.Base64Image;
+import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -12,7 +14,9 @@ public class InformalGroupDto {
     @NotNull
     private String address;
     @NotNull
+    @ValidPhoneNumber
     private String phoneNumber;
+    @ValidPhoneNumber
     private String secondaryPhoneNumber;
     @NotNull
     private String email;
@@ -30,6 +34,7 @@ public class InformalGroupDto {
     private String thirdRepresentativeUIN;
     @NotNull
     private String thirdRepresentativeFullname;
+    @Base64Image
     private String mandatePhoto;
     @NotNull
     private String mandatePhotoContentType;

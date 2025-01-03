@@ -1,8 +1,11 @@
 package com.optimize.land.model.entity;
 
+import com.optimize.common.entities.annotations.ExistsInDB;
+import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import com.optimize.common.entities.entity.BaseEntity;
 import com.optimize.land.model.enumeration.PrivateEntityType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -46,13 +49,16 @@ public class PrivateLegalEntity extends BaseEntity<String> {
     @NotNull
     @Size(min = 8, max = 11)
     @Column(name = "phone_number", length = 11, nullable = false)
+    @ValidPhoneNumber
     private String phoneNumber;
 
     @Size(min = 8, max = 11)
     @Column(name = "secondary_phone_number", length = 11)
+    @ValidPhoneNumber
     private String secondaryPhoneNumber;
 
     @Column(name = "email")
+    @Email
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -88,6 +94,7 @@ public class PrivateLegalEntity extends BaseEntity<String> {
 
     @NotNull
     @Column(name = "representative_uin", nullable = false)
+    @ExistsInDB(entity = Actor.class, field = "uin", message = "le NIU du représentant n'existe pas !")
     private String representativeUIN;
 
     @NotNull

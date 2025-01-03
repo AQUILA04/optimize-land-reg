@@ -23,13 +23,13 @@ public abstract class AbstractActor extends Auditable<String> {
     @SequenceGenerator(name = "actorSequenceGenerator")
     protected Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     protected Person physicalPerson;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     protected InformalGroup informalGroup;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     protected PrivateLegalEntity privateLegalEntity;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     protected PublicLegalEntity publicLegalEntity;
 
     @Size(min = 10, max = 15)
@@ -58,7 +58,7 @@ public abstract class AbstractActor extends Auditable<String> {
 
     @Enumerated(EnumType.STRING)
     protected ActorType type;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     protected Set<FingerprintStore> fingerprintStores;
 
     private void validateUniqueActorType () {

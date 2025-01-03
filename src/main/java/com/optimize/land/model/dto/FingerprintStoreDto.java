@@ -1,5 +1,6 @@
 package com.optimize.land.model.dto;
 
+import com.optimize.common.entities.annotations.Base64Image;
 import com.optimize.land.model.enumeration.Finger;
 import com.optimize.land.model.enumeration.HandType;
 import jakarta.validation.constraints.NotBlank;
@@ -15,6 +16,7 @@ public class FingerprintStoreDto {
     @NotNull
     private Finger fingerName;
     @NotBlank
+    @Base64Image
     private String fingerprintImage;
     private String fingerprintImageContentType;
     private ActorDto actor;
