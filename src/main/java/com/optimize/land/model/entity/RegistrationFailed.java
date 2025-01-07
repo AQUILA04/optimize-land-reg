@@ -1,6 +1,7 @@
 package com.optimize.land.model.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,4 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegistrationFailed extends AbstractActor{
+//    @PrePersist
+//    public void setUp() {
+//        this.id = null;
+//        this.createdBy = null;
+//        this.createdDate = null;
+//    }
 }

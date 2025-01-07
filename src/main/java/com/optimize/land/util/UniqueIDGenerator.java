@@ -12,9 +12,9 @@ public class UniqueIDGenerator {
 
     public static String generateUIN () {
         long date = LocalDate.now().toEpochDay();
-        long random = Long.parseLong(RandomStringUtils.randomNumeric(12));
+        long random = Long.parseLong(RandomStringUtils.randomNumeric(10));
         long uin  = date + random;
-        return "TFI-"+uin;
+        return "LIN-"+uin;
     }
 
     private static final int MAX_ID_PER_MILLISECOND = 999;

@@ -1,5 +1,7 @@
 package com.optimize.land.jms;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optimize.land.jms.model.RegistrationProcessorFeedback;
 import com.optimize.land.service.ActorService;
 import lombok.AllArgsConstructor;
@@ -13,7 +15,8 @@ public class AfisFeedbackConsumer {
 
 
     @KafkaListener(topics = "afis-master-feedback-topic", groupId = "afis-master", containerFactory = "kafkaListenerContainerFactory")
-    public void receiveAFISFeedback (RegistrationProcessorFeedback feedback) {
+    public void receiveAFISFeedback (String message) throws JsonProcessingException {
+        RegistrationProcessorFeedback feedback = new ObjectMapper().readValue(message, RegistrationProcessorFeedback.class);
         actorService.afterMatchingOperation(feedback);
     }
 }

@@ -1,6 +1,8 @@
 package com.optimize.land.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.land.model.enumeration.SynchroStatus;
+import com.optimize.land.model.enumeration.SynchroType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SynchroHistoryDto {
     private Long id;
     private String batchNumber;
@@ -30,4 +33,6 @@ public class SynchroHistoryDto {
     private String operatorAgent;
     private SynchroStatus synchroStatus;
     private ZonedDateTime lastPacketDate;
+    @Enumerated(EnumType.STRING)
+    private SynchroType type;
 }

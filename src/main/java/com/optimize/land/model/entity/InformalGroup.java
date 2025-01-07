@@ -1,5 +1,6 @@
 package com.optimize.land.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.optimize.common.entities.annotations.ExistsInDB;
 import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import com.optimize.common.entities.entity.BaseEntity;
@@ -29,8 +30,7 @@ public class InformalGroup extends BaseEntity<String> {
     @Column(name = "id")
     private Long id;
 
-    @Size(min = 10, max = 15)
-    @Column(name = "uin", length = 15, unique = true)
+    @Column(name = "uin", unique = true)
     private String uin;
 
     @NotNull
@@ -62,8 +62,7 @@ public class InformalGroup extends BaseEntity<String> {
     private String groupType;
 
     @NotNull
-    @Size(min = 10, max = 15)
-    @Column(name = "representative_uin", length = 15, nullable = false)
+    @Column(name = "representative_uin", nullable = false)
     @ExistsInDB(entity = Actor.class, field = "uin", message = "le NIU du premier représentant n'existe pas !")
     private String representativeUIN;
 
@@ -73,8 +72,7 @@ public class InformalGroup extends BaseEntity<String> {
     private String representativeFullname;
 
     @NotNull
-    @Size(min = 10, max = 15)
-    @Column(name = "secondary_representative_uin", length = 15, nullable = false)
+    @Column(name = "secondary_representative_uin", nullable = false)
     @ExistsInDB(entity = Actor.class, field = "uin", message = "le NIU du second représentant n'existe pas !")
     private String secondaryRepresentativeUIN;
 
@@ -84,8 +82,7 @@ public class InformalGroup extends BaseEntity<String> {
     private String secondaryRepresentativeFullname;
 
     @NotNull
-    @Size(min = 10, max = 15)
-    @Column(name = "third_representative_uin", length = 15, nullable = false)
+    @Column(name = "third_representative_uin", nullable = false)
     @ExistsInDB(entity = Actor.class, field = "uin", message = "le NIU du troisième représentant n'existe pas !")
     private String thirdRepresentativeUIN;
 
@@ -94,12 +91,12 @@ public class InformalGroup extends BaseEntity<String> {
     @Column(name = "third_representative_fullname", length = 80, nullable = false)
     private String thirdRepresentativeFullname;
 
-    @Lob
     @Column(name = "mandate_photo", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Basic(fetch = FetchType.LAZY)
     private byte[] mandatePhoto;
 
-    @NotNull
-    @Column(name = "mandate_photo_content_type", nullable = false)
+    @Column(name = "mandate_photo_content_type")
     private String mandatePhotoContentType;
 
 

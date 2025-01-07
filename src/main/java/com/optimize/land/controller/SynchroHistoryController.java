@@ -27,6 +27,11 @@ public class SynchroHistoryController extends BaseController<SynchroHistory, Lon
         return new ResponseEntity<>(success(((SynchroHistoryService) service).initSynchro(dto), "init synchro success"), HttpStatus.OK);
     }
 
+    @PatchMapping(value = "finish-synchro/{batch-number}")
+    public ResponseEntity<Response> finishSynchro(@PathVariable("batch-number") String batchNumber) {
+        return new ResponseEntity<>(success(((SynchroHistoryService) service).finishSynchro(batchNumber), "finish synchro success"), HttpStatus.OK);
+    }
+
     @GetMapping
     @Override
     public ResponseEntity<Response> getAll(Pageable pageable) {

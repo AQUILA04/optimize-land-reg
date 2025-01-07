@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.lang.NonNullApi;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -21,5 +20,5 @@ public interface BaseActorRepository<A extends AbstractActor, I extends Serializ
     @Override
     Optional<A> findById(I i);
 
-    Page<A> findByRegistrationStatusAndState(RegistrationStatus status, State state, Pageable pageable);
+    Page<A> findByRegistrationStatusAndStateOrderByIdDesc(RegistrationStatus status, State state, Pageable pageable);
 }

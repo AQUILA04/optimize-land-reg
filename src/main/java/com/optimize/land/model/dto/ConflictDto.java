@@ -1,5 +1,6 @@
 package com.optimize.land.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.common.entities.annotations.Base64Image;
 import com.optimize.land.model.enumeration.ConflictParty;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConflictDto {
     private Long id;
     private ConflictParty conflictParty;

@@ -1,9 +1,11 @@
 package com.optimize.land.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.land.model.enumeration.RoleActor;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FindingDto {
     private Long id;
     private String nup;

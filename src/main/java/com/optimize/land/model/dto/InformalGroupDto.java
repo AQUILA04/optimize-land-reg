@@ -1,11 +1,13 @@
 package com.optimize.land.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.common.entities.annotations.Base64Image;
 import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class InformalGroupDto {
     private Long id;
     private String uin;
@@ -36,7 +38,6 @@ public class InformalGroupDto {
     private String thirdRepresentativeFullname;
     @Base64Image
     private String mandatePhoto;
-    @NotNull
     private String mandatePhotoContentType;
 
 }

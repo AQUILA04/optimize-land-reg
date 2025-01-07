@@ -32,8 +32,8 @@ public class PrivateLegalEntity extends BaseEntity<String> {
     @Column(name = "id")
     private Long id;
 
-    @Size(min = 10, max = 15)
-    @Column(name = "uin", length = 15)
+
+    @Column(name = "uin")
     private String uin;
 
     @NotNull
@@ -65,20 +65,8 @@ public class PrivateLegalEntity extends BaseEntity<String> {
     @Column(name = "entity_type")
     private PrivateEntityType entityType;
 
-    @Column(name = "identification_doc_type")
-    private String identificationDocType;
-
-    @NotNull
-    @Column(name = "identification_doc_number", nullable = false)
-    private String identificationDocNumber;
-
-    @Lob
-    @Column(name = "identification_doc_photo", nullable = false)
-    private byte[] identificationDocPhoto;
-
-    @NotNull
-    @Column(name = "identification_doc_photo_content_type", nullable = false)
-    private String identificationDocPhotoContentType;
+    @OneToOne(cascade = CascadeType.ALL)
+    private IdentificationDoc identificationDoc;
 
     @NotNull
     @Column(name = "main_activity", nullable = false)
@@ -137,10 +125,6 @@ public class PrivateLegalEntity extends BaseEntity<String> {
             ", secondaryPhoneNumber='" + getSecondaryPhoneNumber() + "'" +
             ", email='" + getEmail() + "'" +
             ", entityType='" + getEntityType() + "'" +
-            ", identificationDocType='" + getIdentificationDocType() + "'" +
-            ", identificationDocNumber='" + getIdentificationDocNumber() + "'" +
-            ", identificationDocPhoto='" + getIdentificationDocPhoto() + "'" +
-            ", identificationDocPhotoContentType='" + getIdentificationDocPhotoContentType() + "'" +
             ", mainActivity='" + getMainActivity() + "'" +
             ", acronym='" + getAcronym() + "'" +
             ", companyCreatedDate='" + getCompanyCreatedDate() + "'" +

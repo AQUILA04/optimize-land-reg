@@ -1,0 +1,38 @@
+package com.optimize.land.model.entity;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.optimize.common.entities.entity.BaseEntity;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+public class IdentificationDoc extends BaseEntity<String> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "identification_doc_type")
+    protected String identificationDocType;
+
+    @Column(name = "other_identification_doc_type")
+    protected String otherIdentificationDocType;
+
+    @Column(name = "identification_doc_number")
+    protected String identificationDocNumber;
+
+    @Column(name = "identification_doc_photo")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Basic(fetch = FetchType.LAZY)
+    protected byte[] identificationDocPhoto;
+
+    @Column(name = "identification_doc_photo_content_type")
+    protected String identificationDocPhotoContentType;
+
+    @OneToOne(mappedBy = "identificationDoc")
+    protected Person person;
+
+    @OneToOne(mappedBy = "identificationDoc")
+    protected PrivateLegalEntity privateLegalEntity;
+}

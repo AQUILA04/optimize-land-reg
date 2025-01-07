@@ -1,16 +1,20 @@
 package com.optimize.land.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.optimize.common.entities.entity.Auditable;
 import com.optimize.common.entities.exception.CustomValidationException;
+import com.optimize.land.model.dto.ActorModel;
 import com.optimize.land.model.enumeration.ActorType;
 import com.optimize.land.model.enumeration.RegistrationStatus;
 import com.optimize.land.model.enumeration.RoleActor;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -19,21 +23,20 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class AbstractActor extends Auditable<String> {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "actorSequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@SequenceGenerator(name = "actorSequenceGenerator")
     protected Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     protected Person physicalPerson;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     protected InformalGroup informalGroup;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     protected PrivateLegalEntity privateLegalEntity;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     protected PublicLegalEntity publicLegalEntity;
 
-    @Size(min = 10, max = 15)
-    @Column(name = "uin", length = 15, unique = true)
+    @Column(name = "uin", unique = true)
     protected String uin;
 
     @NotNull
@@ -58,30 +61,17 @@ public abstract class AbstractActor extends Auditable<String> {
 
     @Enumerated(EnumType.STRING)
     protected ActorType type;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "actor")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     protected Set<FingerprintStore> fingerprintStores;
 
-    private void validateUniqueActorType () {
-            int nonNullCount = 0;
-
-            if (physicalPerson != null) nonNullCount++;
-            if (informalGroup != null) nonNullCount++;
-            if (privateLegalEntity != null) nonNullCount++;
-            if (publicLegalEntity != null) nonNullCount++;
-
-            if (nonNullCount > 1) {
-                throw new CustomValidationException("Only one attribute can be non-null. Found multiple non-null attributes in ['physicalPerson', 'informalGroup', 'privateLegalEntity', 'publicLegalEntity'].");
+    public void validateUniqueActorType () {
+            if (Objects.nonNull(physicalPerson) &&
+                    Objects.nonNull(informalGroup) &&
+                    Objects.nonNull(privateLegalEntity) && Objects.nonNull(publicLegalEntity)) {
+                throw new CustomValidationException("Au moins une valeur pour le type d'acteur est obligatoire !");
             }
-
-        if (physicalPerson != null) {
-            type = ActorType.PHYSICAL_PERSON;
-        } else if (informalGroup != null) {
-            type = ActorType.INFORMAL_GROUP;
-        } else if (privateLegalEntity != null) {
-            type = ActorType.PRIVATE_LEGAL_ENTITY;
-        } else if (publicLegalEntity != null) {
-            type = ActorType.PUBLIC_LEGAL_ENTITY;
-        }
     }
 
     public void updateFingerprint() {
@@ -92,5 +82,35 @@ public abstract class AbstractActor extends Auditable<String> {
         this.rid = rid;
         this.registrationStatus = RegistrationStatus.PENDING;
         fingerprintStores.forEach(fs -> fs.setRid(rid));
+    }
+
+    public ActorModel toActorModel() {
+        ActorModel model = new ActorModel();
+        model.setUin(this.uin);
+        model.setType(this.type);
+        if (actorTypeIs(ActorType.PHYSICAL_PERSON)) {
+            model.setName(this.physicalPerson.getFullName());
+            model.setFirstname(this.physicalPerson.getFirstname());
+            model.setLastname(this.physicalPerson.getLastname());
+        } else if (actorTypeIs(ActorType.INFORMAL_GROUP)) {
+            model.setName(this.informalGroup.getGroupName());
+        } else if (actorTypeIs(ActorType.PRIVATE_LEGAL_ENTITY)) {
+            model.setName(this.privateLegalEntity.getCompanyName());
+        } else {
+            model.setName(this.publicLegalEntity.getPublicEntityType().name());
+        }
+        return model;
+    }
+
+    public boolean actorTypeIs(ActorType actorType) {
+        return actorType.equals(type);
+    }
+
+    @JsonIgnore
+    public void getAllOperations() {
+        this.informalGroup = null;
+        this.physicalPerson = null;
+        this.privateLegalEntity = null;
+        this.publicLegalEntity = null;
     }
 }

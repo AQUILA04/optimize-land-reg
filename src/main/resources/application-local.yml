@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/land_reg_db
+    url: jdbc:postgresql://localhost:5432/olr_demo
     username: francis #jeff #francis
     password: Anid2022 #Admin@1234 #Anid2022
   jpa:
@@ -72,3 +72,4 @@ security:
             phone: 90000001
             gender: MALE
             email: admin@email.com
+debug: true

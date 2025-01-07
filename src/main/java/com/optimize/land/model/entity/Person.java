@@ -1,6 +1,7 @@
 package com.optimize.land.model.entity;
 
-import com.optimize.common.entities.annotations.ExistsInDB;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.optimize.common.entities.annotations.ConditionalNotNull;
 import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import com.optimize.common.entities.entity.Auditable;
 import com.optimize.land.model.enumeration.MaritalStatus;
@@ -9,6 +10,7 @@ import com.optimize.land.model.enumeration.Sex;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,13 +24,15 @@ import java.time.LocalDate;
         columnNames = {"lastname", "firstname", "sex", "marital_status", "birth_date",
                 "place_of_birth", "nationality", "profession", "address", "primary_phone", "email"},
         name = "person_unique_constraint")})
+@ConditionalNotNull(booleanField = "hasIDDoc", dependentField = "identificationDoc")
+//@ConditionalNotNull(booleanField = "hasHandicap", dependentField = "handicapType")
 public class Person extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
     @NotNull
     @Size(min = 2, max = 25)
-    @Column(name = "lastname", length = 25, nullable = false)
+    @Column(name = "lastname", length = 25)
     protected String lastname;
 
     @NotNull
@@ -36,32 +40,32 @@ public class Person extends Auditable<String> {
     @Column(name = "firstname", length = 55, nullable = false)
     protected String firstname;
 
-    @NotNull
+    //@NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "sex", nullable = false)
+    @Column(name = "sex")
     protected Sex sex;
 
-    @Size(min = 10, max = 15)
-    @Column(name = "uin", length = 15, unique = true)
+    @Column(name = "uin", unique = true)
     protected String uin;
 
-    @NotNull
+    //@NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "marital_status", nullable = false)
+    @Column(name = "marital_status")
     protected MaritalStatus maritalStatus;
 
-    @NotNull
-    @Column(name = "birth_date", nullable = false)
+    //@NotNull
+    @Column(name = "birth_date")
+    @PastOrPresent
     protected LocalDate birthDate;
 
-    @NotNull
+    //@NotNull
     @Size(min = 2, max = 60)
-    @Column(name = "place_of_birth", length = 60, nullable = false)
+    @Column(name = "place_of_birth", length = 60)
     protected String placeOfBirth;
 
-    @NotNull
+    //@NotNull
     @Size(min = 2, max = 60)
-    @Column(name = "nationality", length = 60, nullable = false)
+    @Column(name = "nationality", length = 60)
     protected String nationality;
 
     @Column(name = "profession")
@@ -70,9 +74,9 @@ public class Person extends Auditable<String> {
     @Column(name = "other_profession")
     protected String otherProfession;
 
-    @NotNull
+    //@NotNull
     @Size(min = 2, max = 70)
-    @Column(name = "address", length = 70, nullable = false)
+    @Column(name = "address", length = 70)
     protected String address;
 
     @NotNull
@@ -86,8 +90,8 @@ public class Person extends Auditable<String> {
     @ValidPhoneNumber
     protected String secondaryPhone;
 
-    @NotNull
-    @Column(name = "email", nullable = false, unique = true)
+    //@NotNull
+    @Column(name = "email", unique = true)
     @Email
     protected String email;
 
@@ -105,29 +109,16 @@ public class Person extends Auditable<String> {
     @Column(name = "has_id_doc")
     protected Boolean hasIDDoc;
 
-    @Column(name = "identification_doc_type")
-    protected String identificationDocType;
-
-    @Column(name = "other_identification_doc_type")
-    protected String otherIdentificationDocType;
-
-    @Column(name = "identification_doc_number")
-    protected String identificationDocNumber;
-
-    @Lob
-    @Column(name = "identification_doc_photo")
-    protected byte[] identificationDocPhoto;
-
-    @Column(name = "identification_doc_photo_content_type")
-    protected String identificationDocPhotoContentType;
+    @OneToOne(cascade = CascadeType.ALL)
+    protected IdentificationDoc identificationDoc;
 
     @Column(name = "witness_uin")
-    @ExistsInDB(entity = Actor.class, field = "uin", message = "le NIU du témoin n'existe pas !")
+    //@ExistsInDB(entity = Actor.class, field = "uin", message = "le NIU du témoin n'existe pas !")
     protected String witnessUIN;
 
-    @NotNull
+    //@NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "registration_status", nullable = false)
+    @Column(name = "registration_status")
     protected RegistrationStatus registrationStatus;
 
     @Column(name = "status_observation")
@@ -141,4 +132,8 @@ public class Person extends Auditable<String> {
 
     @Column(name = "synchro_packet_number", unique = true)
     protected String synchroPacketNumber;
+
+    public String getFullName() {
+        return this.firstname + " " + this.lastname;
+    }
 }

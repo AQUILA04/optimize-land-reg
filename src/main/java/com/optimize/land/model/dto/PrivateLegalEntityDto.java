@@ -1,5 +1,6 @@
 package com.optimize.land.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.common.entities.annotations.Base64Image;
 import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import com.optimize.land.model.enumeration.PrivateEntityType;
@@ -9,6 +10,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PrivateLegalEntityDto {
     private Long id;
     private String uin;
@@ -23,12 +25,7 @@ public class PrivateLegalEntityDto {
     private String secondaryPhoneNumber;
     private String email;
     private PrivateEntityType entityType;
-    private String identificationDocType;
-    private String identificationDocNumber;
-    @Base64Image
-    private String identificationDocPhoto;
-    @NotNull
-    private String identificationDocPhotoContentType;
+    private IdentificationDocDto identificationDoc;
     @NotNull
     private String mainActivity;
     @NotNull

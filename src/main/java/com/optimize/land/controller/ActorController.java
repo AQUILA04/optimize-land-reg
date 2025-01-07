@@ -1,5 +1,6 @@
 package com.optimize.land.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.optimize.common.entities.config.CustomMessageSource;
 import com.optimize.common.entities.controller.BaseController;
 import com.optimize.common.entities.util.Response;
@@ -23,7 +24,7 @@ public class ActorController extends BaseController<AbstractActor, Long> {
     }
 
     @PostMapping
-    public ResponseEntity<Response> register(@RequestBody @Valid ActorDto actorDto) {
+    public ResponseEntity<Response> register(@RequestBody @Valid ActorDto actorDto) throws JsonProcessingException {
         return new ResponseEntity<>(success(getService().register(actorDto), "Actor register successfully"), HttpStatus.CREATED);
     }
 

@@ -33,7 +33,6 @@ public class Conflict extends Auditable<String> {
      */
     private String seizureProof;
     private String exhibitAndEvidence;
-    @Lob
     private byte[] photoOfProof;
     private String procedureStatus;
     private LocalDate settlementDate;
@@ -41,7 +40,6 @@ public class Conflict extends Auditable<String> {
     private String settlementActor;
     private String regulationWitnesses;
     private String finalDecisionProof;
-    @Lob
     private byte[] settlementProofPhoto;
     private String rightRestrictionType;
     private String currentlyUseFor;

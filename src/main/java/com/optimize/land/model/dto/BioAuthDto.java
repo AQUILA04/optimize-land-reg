@@ -1,11 +1,13 @@
 package com.optimize.land.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.common.entities.annotations.Base64Image;
 import com.optimize.land.model.enumeration.RoleActor;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BioAuthDto {
     @NotBlank(message = "Le NIU est obligatoire pour l'authentification biométrique !")
     private String uin;

@@ -1,5 +1,6 @@
 package com.optimize.land.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.common.entities.exception.CustomValidationException;
 import com.optimize.land.model.enumeration.ActorType;
 import com.optimize.land.model.enumeration.RoleActor;
@@ -9,6 +10,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ActorDto {
     protected Long id;
     @Valid
@@ -24,6 +26,7 @@ public class ActorDto {
     protected String synchroPacketNumber;
     protected RoleActor role;
     protected ActorType type;
+    @Valid
     protected Set<FingerprintStoreDto> fingerprintStores;
 
     public void validateUniqueActorType () {
@@ -40,6 +43,8 @@ public class ActorDto {
 
         if (physicalPerson != null) {
             type = ActorType.PHYSICAL_PERSON;
+            physicalPerson.setSynchroBatchNumber(this.synchroBatchNumber);
+            physicalPerson.setSynchroPacketNumber(this.synchroPacketNumber);
         } else if (informalGroup != null) {
             type = ActorType.INFORMAL_GROUP;
         } else if (privateLegalEntity != null) {

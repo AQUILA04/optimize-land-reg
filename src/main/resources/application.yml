@@ -5,7 +5,7 @@ spring:
     active: local
   docker:
     compose:
-      enabled: true
+      enabled: false
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -18,3 +18,20 @@ spring:
       auto-offset-reset: earliest
       properties:
         spring.json.trusted.packages: "*"
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+        loggerLevel: basic

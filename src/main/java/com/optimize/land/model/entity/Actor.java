@@ -3,6 +3,7 @@ package com.optimize.land.model.entity;
 import com.optimize.land.model.enumeration.ActorType;
 import com.optimize.land.model.enumeration.RegistrationStatus;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,5 +24,14 @@ public class Actor extends AbstractActor {
             this.publicLegalEntity.setUin(this.uin);
         }
         this.registrationStatus = RegistrationStatus.ACTOR;
+        this.id = null;
+        this.fingerprintStores = null;
     }
+
+//    @PrePersist
+//    public void setUp() {
+//        this.id = null;
+//        this.createdBy = null;
+//        this.createdDate = null;
+//    }
 }

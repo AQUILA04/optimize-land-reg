@@ -12,9 +12,9 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public interface ActorMapper {
 
-    @Mapping(target = "identificationDocPhoto", expression = "java(toImageBytes(personDto.getIdentificationDocPhoto()))")
+    //@Mapping(target = "identificationDocPhoto", expression = "java(toImageBytes(personDto.getIdentificationDocPhoto()))")
     Person toPerson(PersonDto personDto);
-    @Mapping(target = "identificationDocPhoto", expression = "java(toBase64String(person.getIdentificationDocPhoto()))")
+    //@Mapping(target = "identificationDocPhoto", expression = "java(toBase64String(person.getIdentificationDocPhoto()))")
     PersonDto toPersonDto(Person person);
 
     @Mapping(target = "mandatePhoto", expression = "java(toImageBytes(informalGroupDto.getMandatePhoto()))")
@@ -22,9 +22,8 @@ public interface ActorMapper {
     @Mapping(target = "mandatePhoto", expression = "java(toBase64String(informalGroup.getMandatePhoto()))")
     InformalGroupDto toInformalGroup(InformalGroup informalGroup);
 
-    @Mapping(target = "identificationDocPhoto", expression = "java(toImageBytes(privateLegalEntityDto.getIdentificationDocPhoto()))")
+
     PrivateLegalEntity toPrivateLegalEntity(PrivateLegalEntityDto privateLegalEntityDto);
-    @Mapping(target = "identificationDocPhoto", expression = "java(toBase64String(privateLegalEntity.getIdentificationDocPhoto()))")
     PrivateLegalEntityDto toPrivateLegalEntityDto(PrivateLegalEntity privateLegalEntity);
 
     PublicLegalEntity toPublicLegalEntity(PublicLegalEntityDto publicLegalEntityDto);
@@ -36,11 +35,18 @@ public interface ActorMapper {
     RegistrationFailed registrationToRegistrationFailed(Registration registration);
 
     @Mapping(target = "fingerprintImage", expression = "java(toImageBytes(fingerprintStoreDto.getFingerprintImage()))")
+    @Mapping(target = "fingerName", expression = "java(fingerprintStoreDto.fingerNameFromString())")
+    @Mapping(target = "handType", expression = "java(fingerprintStoreDto.getHandTypeFromString())")
     FingerprintStore toFingerprintStore(FingerprintStoreDto fingerprintStoreDto);
     @Mapping(target = "fingerprintImage", expression = "java(toBase64String(fingerprintStore.getFingerprintImage()))")
     FingerprintStoreDto toFingerprintStoreDto(FingerprintStore fingerprintStore);
     Set<FingerprintStore> toSetFingerprintStore(Set<FingerprintStoreDto> fingerprintStoreDtoSet);
     Set<FingerprintStoreDto> toSetFingerprintStoreDto(Set<FingerprintStore> fingerprintStores);
+
+    @Mapping(target = "identificationDocPhoto", expression = "java(toImageBytes(identificationDocDto.getIdentificationDocPhoto()))")
+    IdentificationDoc toIdentificationDoc(IdentificationDocDto identificationDocDto);
+    @Mapping(target = "identificationDocPhoto", expression = "java(toBase64String(identificationDoc.getIdentificationDocPhoto()))")
+    IdentificationDocDto toIdentificationDocDto(IdentificationDoc identificationDoc);
 
     default byte[] toImageBytes(String base64String) {
         return Converter.convertToByteImage(base64String);
