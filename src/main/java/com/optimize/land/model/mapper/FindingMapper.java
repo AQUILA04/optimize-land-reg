@@ -28,9 +28,15 @@ public interface FindingMapper extends BaseMapper<Finding, FindingDto> {
 
     @Mapping(target = "photoOfProof", expression = "java(toImageBytes(conflictDto.getPhotoOfProof()))")
     @Mapping(target = "settlementProofPhoto", expression = "java(toImageBytes(conflictDto.getSettlementProofPhoto()))")
+    @Mapping(target = "photoPreuveAcquisition", expression = "java(toImageBytes(conflictDto.getPhotoPreuveAcquisition()))")
+    @Mapping(target = "photoTemoignage", expression = "java(toImageBytes(conflictDto.getPhotoTemoignage()))")
+    @Mapping(target = "photoFicheTemoignage", expression = "java(toImageBytes(conflictDto.getPhotoFicheTemoignage()))")
     Conflict toConflict(ConflictDto conflictDto);
     @Mapping(target = "photoOfProof", expression = "java(toBase64String(conflict.getPhotoOfProof()))")
     @Mapping(target = "settlementProofPhoto", expression = "java(toBase64String(conflict.getSettlementProofPhoto()))")
+    @Mapping(target = "photoPreuveAcquisition", expression = "java(toBase64String(conflict.getPhotoPreuveAcquisition()))")
+    @Mapping(target = "photoTemoignage", expression = "java(toBase64String(conflict.getPhotoTemoignage()))")
+    @Mapping(target = "photoFicheTemoignage", expression = "java(toBase64String(conflict.getPhotoFicheTemoignage()))")
     ConflictDto toConflictDto(Conflict conflict);
 
 

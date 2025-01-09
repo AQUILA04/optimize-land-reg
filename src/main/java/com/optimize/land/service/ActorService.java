@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.optimize.common.entities.enums.State;
 import com.optimize.common.entities.exception.ApplicationException;
 import com.optimize.common.entities.service.GenericService;
+import com.optimize.common.securities.security.services.UserService;
 import com.optimize.land.client.AfisClient;
 import com.optimize.land.jms.AfisProducer;
 import com.optimize.land.jms.model.AfisMasterRequest;
@@ -21,6 +22,7 @@ import com.optimize.land.repository.ActorRepository;
 import com.optimize.land.util.UniqueIDGenerator;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,7 @@ public class ActorService extends GenericService<AbstractActor, Long> {
     private final SynchroHistoryService synchroHistoryService;
     private final AfisProducer afisProducer;
     private final AfisClient afisClient;
+    private UserService userService;
 
     protected ActorService(ActorRepository repository,
                            ActorMapper actorMapper,
@@ -64,6 +67,7 @@ public class ActorService extends GenericService<AbstractActor, Long> {
         registration.validateUniqueActorType();
         final String rid = UniqueIDGenerator.generateRID();
         registration.addRid(rid);
+        registration.setOperatorAgent(userService.getCurrentUser().getUsername());
         fingerprintStoreService.getRepository().saveAll(registration.getFingerprintStores());
         //registration.updateFingerprint();
         create(registration);
@@ -88,9 +92,9 @@ public class ActorService extends GenericService<AbstractActor, Long> {
         synchroHistoryService.successPacket(actor.getSynchroBatchNumber(), actor.getSynchroPacketNumber());
     }
 
-    @Transactional()
+    @Transactional(noRollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void failed(String rid, String message) {
-        Registration registration = (Registration) getRepository().getByRid(rid);
+        Registration registration = getRepository().getRegistrationByRid(rid);
         RegistrationFailed failed = actorMapper.registrationToRegistrationFailed(registration);
         failed.setRegistrationStatus(RegistrationStatus.FAILED);
         failed.setStatusObservation(message);
@@ -101,7 +105,7 @@ public class ActorService extends GenericService<AbstractActor, Long> {
 
     @Transactional
     public void duplicate(String rid, String message) {
-        Registration registration = (Registration) getRepository().getByRid(rid);
+        Registration registration = getRepository().getRegistrationByRid(rid);
         RegistrationDuplicated duplicated = actorMapper.registrationToRegistrationDuplicated(registration);
         duplicated.setRegistrationStatus(RegistrationStatus.FAILED);
         duplicated.setStatusObservation(message);
@@ -114,11 +118,14 @@ public class ActorService extends GenericService<AbstractActor, Long> {
     public void afterMatchingOperation(RegistrationProcessorFeedback feedback) {
         try {
             if (Boolean.TRUE.equals(feedback.getFoundMatch())) {
+                log.info("===> AFIS DUPLICATED UPDATE");
                 duplicate(feedback.getRid(), feedback.getMatchedRID());
             } else {
+                log.info("===> AFIS VALIDATED UPDATE");
                 validate(feedback.getRid());
             }
         } catch (Exception e) {
+            log.error("===> AFIS UPDATE FAILED");
             log.error(e.getLocalizedMessage());
             failed(feedback.getRid(), e.getLocalizedMessage());
         }
@@ -181,5 +188,10 @@ public class ActorService extends GenericService<AbstractActor, Long> {
 
     public ActorRepository getRepository() {
         return (ActorRepository) repository;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

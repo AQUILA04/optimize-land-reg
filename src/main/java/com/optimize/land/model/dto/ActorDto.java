@@ -45,6 +45,7 @@ public class ActorDto {
             type = ActorType.PHYSICAL_PERSON;
             physicalPerson.setSynchroBatchNumber(this.synchroBatchNumber);
             physicalPerson.setSynchroPacketNumber(this.synchroPacketNumber);
+            physicalPerson.setRole(this.role.name());
         } else if (informalGroup != null) {
             type = ActorType.INFORMAL_GROUP;
         } else if (privateLegalEntity != null) {

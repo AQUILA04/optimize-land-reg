@@ -1,5 +1,6 @@
 package com.optimize.land.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.optimize.common.entities.annotations.ConditionalNotNull;
 import com.optimize.common.entities.entity.Auditable;
 import com.optimize.land.model.enumeration.RoleActor;
@@ -35,8 +36,12 @@ public class Finding extends Auditable<String> {
     @Valid
     @OneToOne(cascade = CascadeType.ALL)
     private CheckListOperation lastCheckListOperation;
+    @JsonManagedReference
     @Valid
     @OneToOne(cascade = CascadeType.ALL)
     private Conflict conflict;
+    private String synchroBatchNumber;
+    private String synchroPacketNumber;
+    private String operatorAgent;
 
 }

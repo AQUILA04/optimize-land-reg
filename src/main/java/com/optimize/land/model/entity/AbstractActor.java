@@ -61,6 +61,7 @@ public abstract class AbstractActor extends Auditable<String> {
 
     @Enumerated(EnumType.STRING)
     protected ActorType type;
+    private String operatorAgent;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "actor")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonManagedReference
@@ -97,7 +98,7 @@ public abstract class AbstractActor extends Auditable<String> {
         } else if (actorTypeIs(ActorType.PRIVATE_LEGAL_ENTITY)) {
             model.setName(this.privateLegalEntity.getCompanyName());
         } else {
-            model.setName(this.publicLegalEntity.getPublicEntityType().name());
+            model.setName(Objects.nonNull(this.publicLegalEntity.getName()) ? this.publicLegalEntity.getName() : this.privateLegalEntity.getEntityType().name());
         }
         return model;
     }

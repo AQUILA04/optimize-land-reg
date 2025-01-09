@@ -1,5 +1,6 @@
 package com.optimize.land.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.common.entities.annotations.Base64Image;
 import com.optimize.land.model.enumeration.ConflictParty;
@@ -13,9 +14,9 @@ public class ConflictDto {
     private Long id;
     private ConflictParty conflictParty;
     private String firstConflictPartyNUP;
-    private String firstConflictPartyOccupationDurationInMonth;
+    private Integer firstConflictPartyOccupationDurationInMonth;
     private String secondConflictPartyNUP;
-    private String secondConflictPartyOccupationDurationInMonth;
+    private Integer secondConflictPartyOccupationDurationInMonth;
     private String conflictObject;
     private String rightClaimed;
     private String rightClaimedOrigin;
@@ -42,4 +43,19 @@ public class ConflictDto {
     private String currentlyUseFor;
     private String agriculturalDevelopmentType;
     private String pointOfAttention;
+    private String modeAcquisition;
+    private String siHeritageDeQui;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate siHeritageDateDeces;
+    private Integer girlCount;
+    private Integer boyCount;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateAcquisition;
+    private String typePreuveAcquisition;
+    @Base64Image
+    private String photoPreuveAcquisition;
+    @Base64Image
+    private String photoTemoignage;
+    @Base64Image
+    private String photoFicheTemoignage;
 }

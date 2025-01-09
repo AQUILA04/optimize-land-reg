@@ -57,7 +57,7 @@ public class PersonDto {
     protected Boolean hasIDDoc;
     protected IdentificationDocDto identificationDoc;
     protected String witnessUIN;
-    protected RegistrationStatus registrationStatus;
+    protected String role;
     protected String statusObservation;
     protected String rid;
     protected String synchroBatchNumber;

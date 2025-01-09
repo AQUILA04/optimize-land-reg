@@ -12,6 +12,6 @@ public enum RoleActor {
     EXPLOITING,
     OWNER_OR_REPRESENTATIVE,
     TOPOGRAPHER,
-    SOCIAL_LAND_AGENT
-
+    SOCIAL_LAND_AGENT,
+    TIERS
 }

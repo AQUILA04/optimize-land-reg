@@ -28,7 +28,7 @@ public class FindingController extends BaseController<Finding, Long> {
     @GetMapping
     @Override
     public ResponseEntity<Response> getAll(Pageable pageable) {
-        return super.getAll(pageable);
+        return new ResponseEntity<>(success(getService().getAllToProjection(pageable), "Constatation get all success"), HttpStatus.OK);
     }
 
     @GetMapping(value = "all")

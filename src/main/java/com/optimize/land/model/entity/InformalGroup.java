@@ -1,9 +1,9 @@
 package com.optimize.land.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.optimize.common.entities.annotations.ExistsInDB;
 import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import com.optimize.common.entities.entity.BaseEntity;
+import com.optimize.land.annotation.ExistsInDB;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

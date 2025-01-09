@@ -72,4 +72,14 @@ security:
             phone: 90000001
             gender: MALE
             email: admin@email.com
+        joseph:
+          username: joseph
+          password: Pass1234
+          profil: ADMIN
+          user-details:
+            firstname: Joseph
+            lastname: EGBENDEWE
+            phone: 90000002
+            gender: MALE
+            email: josephegbendewe@gmail.com
 debug: true

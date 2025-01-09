@@ -57,6 +57,7 @@ public class SynchroHistoryService extends GenericService<SynchroHistory, Long> 
         }
     }
 
+    @Transactional(noRollbackFor = RuntimeException.class, propagation = Propagation.REQUIRES_NEW)
     public void failedPacket(String batchNumber, String packetNumber) {
         if (Objects.nonNull(batchNumber) && Objects.nonNull(packetNumber)) {
             SynchroHistory history = getRepository().getByBatchNumber(batchNumber);
@@ -65,6 +66,7 @@ public class SynchroHistoryService extends GenericService<SynchroHistory, Long> 
         }
     }
 
+    @Transactional(noRollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void duplicatedPacket(String batchNumber, String packetNumber) {
         if (Objects.nonNull(batchNumber) && Objects.nonNull(packetNumber)) {
             SynchroHistory history = getRepository().getByBatchNumber(batchNumber);
@@ -80,6 +82,7 @@ public class SynchroHistoryService extends GenericService<SynchroHistory, Long> 
             getRepository().saveAndFlush(history);
         }
     }
+
 
     public SynchroHistoryRepository getRepository() {
         return (SynchroHistoryRepository) repository;
