@@ -5,6 +5,7 @@ import com.optimize.common.entities.exception.CustomValidationException;
 import com.optimize.land.model.enumeration.ActorType;
 import com.optimize.land.model.enumeration.RoleActor;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.Set;
@@ -27,6 +28,7 @@ public class ActorDto {
     protected RoleActor role;
     protected ActorType type;
     @Valid
+    @Size(min = 3, max =3)
     protected Set<FingerprintStoreDto> fingerprintStores;
 
     public void validateUniqueActorType () {

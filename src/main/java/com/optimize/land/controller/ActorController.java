@@ -31,13 +31,13 @@ public class ActorController extends BaseController<AbstractActor, Long> {
     @GetMapping
     @Override
     public ResponseEntity<Response> getAll(Pageable pageable) {
-        return super.getAll(pageable);
+        return new ResponseEntity<>(success(getService().getByStatus(RegistrationStatus.ACTOR, pageable), "Get All actor success"), HttpStatus.OK);
     }
 
     @GetMapping(value = "all")
     @Override
     public ResponseEntity<Response> getAll() {
-        return super.getAll();
+        return new ResponseEntity<>(success(getService().getByStatus(RegistrationStatus.ACTOR), "Get All actor success"), HttpStatus.OK);
     }
 
     @GetMapping(value = "by-status")

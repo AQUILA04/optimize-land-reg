@@ -5,6 +5,11 @@ import com.optimize.land.model.entity.AbstractActor;
 import com.optimize.land.model.entity.Actor;
 import com.optimize.land.model.entity.Registration;
 import com.optimize.land.model.enumeration.RegistrationStatus;
+import com.optimize.land.model.projection.ActorProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +21,19 @@ public interface ActorRepository extends BaseActorRepository<AbstractActor, Long
     Optional<Registration> findByRidAndRegistrationStatusIn(String rid, List<RegistrationStatus> status);
 
     Optional<Actor> findByUinAndRegistrationStatus(String rid, RegistrationStatus status);
+
+    //@Query(value = "SELECT a.id, a.uin, a.registrationStatus, a.role FROM Actor a WHERE a.registrationStatus = :status ORDER BY a.id DESC")
+    Page<ActorProjection> findByRegistrationStatus(@Param(value = "status") RegistrationStatus status, Pageable pageable);
+
+    //@Query(value = "SELECT a.id, a.uin, a.registrationStatus, a.role FROM Actor a WHERE a.registrationStatus = :status AND a.operatorAgent = :operatorAgent ORDER BY a.id DESC")
+    Page<ActorProjection> findByRegistrationStatusAndOperatorAgent(@Param(value = "status") RegistrationStatus status, @Param(value = "operatorAgent") String operatorAgent, Pageable pageable);
+
+    @Query(value = "SELECT a.id, a.uin, a.registrationStatus, a.role FROM Actor a WHERE a.registrationStatus = :status ORDER BY a.id DESC")
+    List<ActorProjection> findByRegistrationStatus(@Param(value = "status") RegistrationStatus status);
+
+    @Query(value = "SELECT a.id, a.uin, a.registrationStatus, a.role FROM Actor a WHERE a.registrationStatus = :status AND a.operatorAgent = :operatorAgent ORDER BY a.id DESC")
+    List<ActorProjection> findByRegistrationStatus(@Param(value = "status") RegistrationStatus status, @Param(value = "operatorAgent") String operatorAgent);
+
 
     default AbstractActor getByRid(String rid) {
         return findByRid(rid).orElseThrow(() -> new ResourceNotFoundException("Could not find actor by rid " + rid));

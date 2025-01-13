@@ -2,6 +2,7 @@ package com.optimize.land.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.optimize.common.entities.annotations.NonEmptyByteArray;
 import com.optimize.common.entities.entity.Auditable;
 import com.optimize.common.entities.entity.BaseEntity;
 import com.optimize.land.model.enumeration.Finger;
@@ -37,6 +38,7 @@ public class FingerprintStore extends BaseEntity<String> {
 
     @Column(name = "fingerprint_image")
     @Basic(fetch = FetchType.LAZY)
+    @NonEmptyByteArray
     //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private byte[] fingerprintImage;
 

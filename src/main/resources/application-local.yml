@@ -14,13 +14,6 @@ spring:
             non_contextual_creation: true
   main:
     allow-circular-references: true
-  boot:
-    admin:
-      client:
-        url: http://localhost:8090
-        instance:
-          service-base-url: http://localhost:8080
-          service-host-type: IP
 
 bezkoder:
   app:
@@ -82,4 +75,18 @@ security:
             phone: 90000002
             gender: MALE
             email: josephegbendewe@gmail.com
+lang-reg:
+  kafka:
+    config:
+      num-partitions:
+        afis-master-topic: 1
+        afis-matcher-topic: 1
+        afis-matcher-result-topic: 1
+        afis-master-feedback-topic: 1
+      replication-factor:
+        afis-master-topic: 1
+        afis-matcher-topic: 1
+        afis-matcher-result-topic: 1
+        afis-master-feedback-topic: 1
+
 debug: true

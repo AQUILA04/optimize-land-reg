@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.optimize.common.entities.enums.State;
 import com.optimize.common.entities.exception.ApplicationException;
 import com.optimize.common.entities.service.GenericService;
+import com.optimize.common.securities.models.User;
 import com.optimize.common.securities.security.services.UserService;
 import com.optimize.land.client.AfisClient;
 import com.optimize.land.jms.AfisProducer;
@@ -18,7 +19,9 @@ import com.optimize.land.model.enumeration.BioAuthResponse;
 import com.optimize.land.model.enumeration.RegistrationStatus;
 import com.optimize.land.model.enumeration.SynchroType;
 import com.optimize.land.model.mapper.ActorMapper;
+import com.optimize.land.model.projection.ActorProjection;
 import com.optimize.land.repository.ActorRepository;
+import com.optimize.land.util.ProfilConstant;
 import com.optimize.land.util.UniqueIDGenerator;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -131,10 +134,23 @@ public class ActorService extends GenericService<AbstractActor, Long> {
         }
     }
 
-    public Page<AbstractActor> getByStatus(RegistrationStatus status, Pageable pageable) {
-        Page<AbstractActor> pageActor = getRepository().findByRegistrationStatusAndStateOrderByIdDesc(status, State.ENABLED, pageable);
-        pageActor.getContent().forEach(AbstractActor::getAllOperations);
-        return pageActor;
+    public Page<ActorProjection> getByStatus(RegistrationStatus status, Pageable pageable) {
+        User user = userService.getCurrentUser();
+        if (user.is(ProfilConstant.LAND_AGENT_OPERATOR)) {
+            return getRepository().findByRegistrationStatusAndOperatorAgent(status, user.getUsername(), pageable);
+        }
+//        Page<AbstractActor> pageActor = getRepository().findByRegistrationStatusAndStateOrderByIdDesc(status, State.ENABLED, pageable);
+//        pageActor.getContent().forEach(AbstractActor::getAllOperations);
+//        return pageActor;
+        return getRepository().findByRegistrationStatus(status, pageable);
+    }
+
+    public List<ActorProjection> getByStatus(RegistrationStatus status) {
+        User user = userService.getCurrentUser();
+        if (user.is(ProfilConstant.LAND_AGENT_OPERATOR)) {
+            return getRepository().findByRegistrationStatus(status, user.getUsername());
+        }
+        return getRepository().findByRegistrationStatus(status);
     }
 
     public FingerprintAuthenticationResp bioAuth(BioAuthDto dto) {

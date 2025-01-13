@@ -1,5 +1,7 @@
 package com.optimize.land.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.optimize.common.entities.annotations.*;
 import com.optimize.common.entities.entity.Auditable;
 import com.optimize.land.annotation.ExistsInDB;
@@ -60,6 +62,7 @@ public class Person extends Auditable<String> {
     @Column(name = "birth_date")
     @PastOrPresent
     @DependentField
+    @JsonFormat(pattern = "yyyy-MM-dd")
     protected LocalDate birthDate;
 
     //@NotNull
@@ -123,6 +126,7 @@ public class Person extends Auditable<String> {
 
     @OneToOne(cascade = CascadeType.ALL)
     @DependentField
+    @JsonManagedReference
     protected IdentificationDoc identificationDoc;
 
     @Column(name = "witness_uin")

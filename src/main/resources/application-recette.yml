@@ -71,3 +71,16 @@ security:
             phone: 90000001
             gender: MALE
             email: admin@email.com
+lang-reg:
+  kafka:
+    config:
+      num-partitions:
+        afis-master-topic: 1
+        afis-matcher-topic: 1
+        afis-matcher-result-topic: 1
+        afis-master-feedback-topic: 1
+      replication-factor: #la valeur ne doit pas dépasser le nombre de brokers déployer
+        afis-master-topic: 1
+        afis-matcher-topic: 1
+        afis-matcher-result-topic: 1
+        afis-master-feedback-topic: 1

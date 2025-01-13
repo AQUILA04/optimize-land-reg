@@ -10,5 +10,5 @@ import org.springframework.data.domain.Pageable;
 public interface FindingRepository extends GenericRepository<Finding, Long> {
 
     Page<FindingProjection> findByStateOrderByIdDesc(State state, Pageable pageable);
-    Page<FindingProjection> findByStateAndCreatedByOrderByIdDesc(State state, String agent, Pageable pageable);
+    Page<FindingProjection> findByStateAndOperatorAgentOrderByIdDesc(State state, String agent, Pageable pageable);
 }

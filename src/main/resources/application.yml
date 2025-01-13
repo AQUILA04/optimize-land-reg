@@ -28,6 +28,13 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
+  boot:
+    admin:
+      client:
+        url: http://localhost:1111
+        instance:
+#          service-base-url: http://localhost:1111
+          service-host-type: IP
 feign:
   client:
     config:

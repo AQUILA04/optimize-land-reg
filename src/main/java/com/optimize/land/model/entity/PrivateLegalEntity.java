@@ -1,5 +1,7 @@
 package com.optimize.land.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import com.optimize.common.entities.entity.BaseEntity;
 import com.optimize.land.annotation.ExistsInDB;
@@ -65,6 +67,7 @@ public class PrivateLegalEntity extends BaseEntity<String> {
     @Column(name = "entity_type")
     private PrivateEntityType entityType;
 
+    @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL)
     private IdentificationDoc identificationDoc;
 
@@ -78,6 +81,7 @@ public class PrivateLegalEntity extends BaseEntity<String> {
 
     @NotNull
     @Column(name = "company_created_date", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate companyCreatedDate;
 
     @NotNull

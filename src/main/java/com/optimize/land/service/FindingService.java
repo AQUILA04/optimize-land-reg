@@ -11,6 +11,7 @@ import com.optimize.land.model.enumeration.SynchroType;
 import com.optimize.land.model.mapper.FindingMapper;
 import com.optimize.land.model.projection.FindingProjection;
 import com.optimize.land.repository.FindingRepository;
+import com.optimize.land.util.ProfilConstant;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,7 @@ public class FindingService extends GenericService<Finding, Long> {
     @Transactional
     public Long register(@NotNull FindingDto findingDto) {
         this.synchroHistoryService.receivedPacket(findingDto.getSynchroBatchNumber(), findingDto.getSynchroPacketNumber(), SynchroType.FINDING);
+        findingDto.validateFirstAndLastCheckListOperations();
         Finding finding = findingMapper.toEntity(findingDto);
         this.checkListOperationService.create(finding.getFirstCheckListOperation());
         this.checkListOperationService.create(finding.getLastCheckListOperation());
@@ -50,8 +52,8 @@ public class FindingService extends GenericService<Finding, Long> {
 
     public Page<FindingProjection> getAllToProjection(Pageable pageable) {
         User user = userService.getCurrentUser();
-        if (user.is("LAND_AGENT")) {
-            return getRepository().findByStateAndCreatedByOrderByIdDesc(State.ENABLED, user.getUsername(), pageable);
+        if (user.is(ProfilConstant.LAND_AGENT_OPERATOR)) {
+            return getRepository().findByStateAndOperatorAgentOrderByIdDesc(State.ENABLED, user.getUsername(), pageable);
         }
         return this.getRepository().findByStateOrderByIdDesc(State.ENABLED, pageable);
     }

@@ -2,6 +2,7 @@ package com.optimize.land.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.common.entities.annotations.ConditionalNotNull;
+import com.optimize.common.entities.exception.CustomValidationException;
 import com.optimize.land.model.enumeration.RoleActor;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -32,4 +33,13 @@ public class FindingDto {
     private ConflictDto conflict;
     private String synchroBatchNumber;
     private String synchroPacketNumber;
+
+    public void validateFirstAndLastCheckListOperations() {
+        if (!this.firstCheckListOperation.equals(this.lastCheckListOperation)) {
+            throw new CustomValidationException("Le checkList avant opération n'est pas conforme au checkList après opération !");
+        }
+        this.firstCheckListOperation.uniqueUINByActorCheck();
+        this.lastCheckListOperation.uniqueUINByActorCheck();
+    }
+
 }
