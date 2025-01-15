@@ -3,7 +3,6 @@ package com.optimize.land.model.entity;
 import com.optimize.land.model.enumeration.ActorType;
 import com.optimize.land.model.enumeration.RegistrationStatus;
 import jakarta.persistence.Entity;
-import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -6,6 +6,7 @@ import com.optimize.common.entities.controller.BaseController;
 import com.optimize.common.entities.util.Response;
 import com.optimize.land.model.dto.ActorDto;
 import com.optimize.land.model.dto.BioAuthDto;
+import com.optimize.land.model.dto.UINWrapper;
 import com.optimize.land.model.entity.AbstractActor;
 import com.optimize.land.model.enumeration.RegistrationStatus;
 import com.optimize.land.service.ActorService;
@@ -60,6 +61,16 @@ public class ActorController extends BaseController<AbstractActor, Long> {
     @PostMapping(value = "bio-auth")
     public ResponseEntity<Response> bioAuthentication(@RequestBody @Valid BioAuthDto dto) {
         return new ResponseEntity<>(success(getService().bioAuth(dto), "success bio authentication"), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "uin-details")
+    public ResponseEntity<Response> getUINDetails(@RequestBody @Valid UINWrapper uinWrapper) {
+        return new ResponseEntity<>(success(getService().getUINDetails(uinWrapper), "success get UIN details"), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "{id}")
+    public ResponseEntity<Response> update(@PathVariable Long id, @RequestBody @Valid ActorDto dto) {
+        return new ResponseEntity<>(success(getService().updateActor(dto, id), "success update actor"), HttpStatus.OK);
     }
 
     public ActorService getService() {

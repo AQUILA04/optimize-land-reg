@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ActorRepository extends BaseActorRepository<AbstractActor, Long> {
 
@@ -34,6 +35,7 @@ public interface ActorRepository extends BaseActorRepository<AbstractActor, Long
     @Query(value = "SELECT a.id, a.uin, a.registrationStatus, a.role FROM Actor a WHERE a.registrationStatus = :status AND a.operatorAgent = :operatorAgent ORDER BY a.id DESC")
     List<ActorProjection> findByRegistrationStatus(@Param(value = "status") RegistrationStatus status, @Param(value = "operatorAgent") String operatorAgent);
 
+    List<Actor> findByUinInAndRegistrationStatus(Set<String> uinList, RegistrationStatus status);
 
     default AbstractActor getByRid(String rid) {
         return findByRid(rid).orElseThrow(() -> new ResourceNotFoundException("Could not find actor by rid " + rid));

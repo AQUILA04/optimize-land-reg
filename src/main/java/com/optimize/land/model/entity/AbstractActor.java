@@ -85,10 +85,12 @@ public abstract class AbstractActor extends Auditable<String> {
         fingerprintStores.forEach(fs -> fs.setRid(rid));
     }
 
+    @JsonIgnore
     public ActorModel toActorModel() {
         ActorModel model = new ActorModel();
         model.setUin(this.uin);
         model.setType(this.type);
+        model.setRole(this.role);
         if (actorTypeIs(ActorType.PHYSICAL_PERSON)) {
             model.setName(this.physicalPerson.getFullName());
             model.setFirstname(this.physicalPerson.getFirstname());

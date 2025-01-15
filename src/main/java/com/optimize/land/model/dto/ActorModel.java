@@ -1,6 +1,7 @@
 package com.optimize.land.model.dto;
 
 import com.optimize.land.model.enumeration.ActorType;
+import com.optimize.land.model.enumeration.RoleActor;
 import lombok.Data;
 
 @Data
@@ -10,4 +11,5 @@ public class ActorModel {
     private String firstname;
     private String lastname;
     private ActorType type;
+    private RoleActor role;
 }

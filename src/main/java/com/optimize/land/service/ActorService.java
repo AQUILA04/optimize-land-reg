@@ -3,6 +3,7 @@ package com.optimize.land.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.optimize.common.entities.enums.State;
 import com.optimize.common.entities.exception.ApplicationException;
+import com.optimize.common.entities.exception.CustomValidationException;
 import com.optimize.common.entities.service.GenericService;
 import com.optimize.common.securities.models.User;
 import com.optimize.common.securities.security.services.UserService;
@@ -10,9 +11,7 @@ import com.optimize.land.client.AfisClient;
 import com.optimize.land.jms.AfisProducer;
 import com.optimize.land.jms.model.AfisMasterRequest;
 import com.optimize.land.jms.model.RegistrationProcessorFeedback;
-import com.optimize.land.model.dto.ActorDto;
-import com.optimize.land.model.dto.BioAuthDto;
-import com.optimize.land.model.dto.FingerprintAuthenticationResp;
+import com.optimize.land.model.dto.*;
 import com.optimize.land.model.entity.*;
 import com.optimize.land.model.enumeration.ActorType;
 import com.optimize.land.model.enumeration.BioAuthResponse;
@@ -34,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Service
@@ -200,6 +200,46 @@ public class ActorService extends GenericService<AbstractActor, Long> {
         Page<AbstractActor> pageActor = getRepository().findByRegistrationStatusAndStateOrderByIdDesc(RegistrationStatus.ACTOR, State.ENABLED, pageable);
         pageActor.getContent().forEach(AbstractActor::getAllOperations);
         return pageActor;
+    }
+
+    public List<ActorModel> getUINDetails(UINWrapper uinWrapper) {
+        List<Actor> actors = getRepository().findByUinInAndRegistrationStatus(uinWrapper.getUinList(), RegistrationStatus.ACTOR);
+        return actors.stream().map(AbstractActor::toActorModel).toList();
+    }
+
+    @Transactional
+    public String updateActor(ActorDto actorDto, Long id) {
+        actorDto.setId(id);
+        Registration registration = actorMapper.toRegistration(actorDto);
+        Actor actor = actorMapper.registrationToActor(registration);
+        updateFingerprint(actor.getFingerprintStores());
+        updateIdentificationDoc(actor);
+        update(actor);
+        return "updated:success";
+    }
+
+    public void updateFingerprint(Set<FingerprintStore> fingerprintStores) {
+        if (Objects.nonNull(fingerprintStores)) {
+            throw new ApplicationException("Fingerprint update is not supported yet !!!");
+        }
+    }
+
+    public void updateIdentificationDoc(Actor actor) {
+        if (actor.actorTypeIs(ActorType.PHYSICAL_PERSON) && Objects.nonNull(actor.getPhysicalPerson().getIdentificationDoc()) && Objects.isNull(actor.getPhysicalPerson().getIdentificationDoc().getId())) {
+            throw new CustomValidationException("l'identifiant du document d'identification est obligatoire pour la mise à jour !");
+        }
+
+        if (actor.actorTypeIs(ActorType.PRIVATE_LEGAL_ENTITY) && Objects.nonNull(actor.getPrivateLegalEntity().getIdentificationDoc()) && Objects.isNull(actor.getPhysicalPerson().getIdentificationDoc().getId())) {
+            throw new CustomValidationException("l'identifiant du document d'identification est obligatoire pour la mise à jour !");
+        }
+
+        Actor existed = (Actor) getById(actor.getId());
+        if (actor.actorTypeIs(ActorType.PHYSICAL_PERSON) && Objects.isNull(actor.getPhysicalPerson().getIdentificationDoc())) {
+            actor.getPhysicalPerson().setIdentificationDoc(existed.getPhysicalPerson().getIdentificationDoc());
+        }
+        else if (actor.actorTypeIs(ActorType.PRIVATE_LEGAL_ENTITY) && Objects.isNull(actor.getPrivateLegalEntity().getIdentificationDoc())) {
+            actor.getPrivateLegalEntity().setIdentificationDoc(existed.getPrivateLegalEntity().getIdentificationDoc());
+        }
     }
 
     public ActorRepository getRepository() {
