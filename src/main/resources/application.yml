@@ -2,7 +2,7 @@ spring:
   application:
     name: optimize-land-reg
   profiles:
-    active: local
+    active: recette
   docker:
     compose:
       enabled: false

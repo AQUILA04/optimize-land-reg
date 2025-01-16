@@ -110,7 +110,7 @@ public class ActorService extends GenericService<AbstractActor, Long> {
     public void duplicate(String rid, String message) {
         Registration registration = getRepository().getRegistrationByRid(rid);
         RegistrationDuplicated duplicated = actorMapper.registrationToRegistrationDuplicated(registration);
-        duplicated.setRegistrationStatus(RegistrationStatus.FAILED);
+        duplicated.setRegistrationStatus(RegistrationStatus.DUPLICATED);
         duplicated.setStatusObservation(message);
         getRepository().delete(registration);
         create(duplicated);
@@ -240,6 +240,10 @@ public class ActorService extends GenericService<AbstractActor, Long> {
         else if (actor.actorTypeIs(ActorType.PRIVATE_LEGAL_ENTITY) && Objects.isNull(actor.getPrivateLegalEntity().getIdentificationDoc())) {
             actor.getPrivateLegalEntity().setIdentificationDoc(existed.getPrivateLegalEntity().getIdentificationDoc());
         }
+    }
+
+    public void putInQueue()  {
+
     }
 
     public ActorRepository getRepository() {

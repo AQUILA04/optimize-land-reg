@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/land_reg_db
-    username: francis #jeff #francis
-    password: Anid2022 #Admin@1234 #Anid2022
+    url: jdbc:postgresql://localhost:5432/olr_recette_db
+    username: app #jeff #francis
+    password: "L@ngRegAPP" #Admin@1234 #Anid2022
   jpa:
     hibernate:
       ddl-auto: update
