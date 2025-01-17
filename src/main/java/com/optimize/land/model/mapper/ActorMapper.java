@@ -31,8 +31,6 @@ public interface ActorMapper {
 
     Registration toRegistration(ActorDto actorDto);
     Actor registrationToActor(Registration registration);
-    RegistrationDuplicated registrationToRegistrationDuplicated(Registration registration);
-    RegistrationFailed registrationToRegistrationFailed(Registration registration);
 
     @Mapping(target = "fingerprintImage", expression = "java(toImageBytes(fingerprintStoreDto.getFingerprintImage()))")
     @Mapping(target = "fingerName", expression = "java(fingerprintStoreDto.fingerNameFromString())")

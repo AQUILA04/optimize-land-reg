@@ -18,6 +18,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -125,7 +127,6 @@ public class Person extends Auditable<String> {
     protected Boolean hasIDDoc;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @DependentField
     @JsonManagedReference
     protected IdentificationDoc identificationDoc;
 
@@ -152,5 +153,18 @@ public class Person extends Auditable<String> {
 
     public String getFullName() {
         return this.firstname + " " + this.lastname;
+    }
+
+
+    @PrePersist
+    @PreUpdate
+    public void setUp() {
+        if (Objects.nonNull(hasIDDoc) && Boolean.FALSE.equals(hasIDDoc)) {
+            this.identificationDoc = null;
+        }
+
+        if (List.of("TOPOGRAPHER", "SOCIAL_LAND_AGENT", "TIERS").contains(role)) {
+            this.identificationDoc = null;
+        }
     }
 }

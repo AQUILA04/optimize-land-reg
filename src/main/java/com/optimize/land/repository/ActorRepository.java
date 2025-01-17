@@ -26,8 +26,12 @@ public interface ActorRepository extends BaseActorRepository<AbstractActor, Long
     //@Query(value = "SELECT a.id, a.uin, a.registrationStatus, a.role FROM Actor a WHERE a.registrationStatus = :status ORDER BY a.id DESC")
     Page<ActorProjection> findByRegistrationStatus(@Param(value = "status") RegistrationStatus status, Pageable pageable);
 
+    Page<ActorProjection> findByRegistrationStatusInOrderByIdDesc(@Param(value = "status") List<RegistrationStatus> status, Pageable pageable);
+
     //@Query(value = "SELECT a.id, a.uin, a.registrationStatus, a.role FROM Actor a WHERE a.registrationStatus = :status AND a.operatorAgent = :operatorAgent ORDER BY a.id DESC")
     Page<ActorProjection> findByRegistrationStatusAndOperatorAgent(@Param(value = "status") RegistrationStatus status, @Param(value = "operatorAgent") String operatorAgent, Pageable pageable);
+
+    Page<ActorProjection> findByRegistrationStatusInAndOperatorAgentOrderByIdDesc(@Param(value = "status") List<RegistrationStatus> status, @Param(value = "operatorAgent") String operatorAgent, Pageable pageable);
 
     @Query(value = "SELECT a.id, a.uin, a.registrationStatus, a.role FROM Actor a WHERE a.registrationStatus = :status ORDER BY a.id DESC")
     List<ActorProjection> findByRegistrationStatus(@Param(value = "status") RegistrationStatus status);
@@ -48,4 +52,6 @@ public interface ActorRepository extends BaseActorRepository<AbstractActor, Long
     default Actor getByUin(String uin) {
         return findByUinAndRegistrationStatus(uin, RegistrationStatus.ACTOR).orElse(null);
     }
+
+    boolean existsByRidAndRegistrationStatusIn(String rid, List<RegistrationStatus> statusList);
 }

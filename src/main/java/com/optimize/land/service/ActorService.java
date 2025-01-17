@@ -65,23 +65,32 @@ public class ActorService extends GenericService<AbstractActor, Long> {
     public String register(@NotNull ActorDto actorDto) throws JsonProcessingException {
         synchroHistoryService.receivedPacket(actorDto.getSynchroBatchNumber(),
                 actorDto.getSynchroPacketNumber(), SynchroType.ACTOR);
-        actorDto.validateUniqueActorType();
-        Registration registration = actorMapper.toRegistration(actorDto);
-        registration.validateUniqueActorType();
-        final String rid = UniqueIDGenerator.generateRID();
-        registration.addRid(rid);
-        registration.setOperatorAgent(userService.getCurrentUser().getUsername());
-        fingerprintStoreService.getRepository().saveAll(registration.getFingerprintStores());
-        //registration.updateFingerprint();
-        create(registration);
-        //fingerprintStoreService.getRepository().saveAllAndFlush(registration.getFingerprintStores());
-        if(ActorType.PHYSICAL_PERSON.equals(registration.getType())) {
-            afisProducer.sendMatchingRequest(new AfisMasterRequest(registration.getRid(),
-                    registration.getFingerprintStores()));
-        } else {
-            validateLegalEntity(registration);
+        try {
+            actorDto.validateUniqueActorType();
+            Registration registration = actorMapper.toRegistration(actorDto);
+            registration.validateUniqueActorType();
+            final String rid = UniqueIDGenerator.generateRID();
+            registration.addRid(rid);
+            registration.setOperatorAgent(userService.getCurrentUser().getUsername());
+            fingerprintStoreService.getRepository().saveAll(registration.getFingerprintStores());
+            //registration.updateFingerprint();
+            create(registration);
+            //fingerprintStoreService.getRepository().saveAllAndFlush(registration.getFingerprintStores());
+            if(registration.actorTypeIs(ActorType.PHYSICAL_PERSON)) {
+                afisProducer.sendMatchingRequest(new AfisMasterRequest(registration.getRid(),
+                        registration.getFingerprintStores()));
+                registration.setRegistrationStatus(RegistrationStatus.QUEUED);
+                update(registration);
+            } else {
+                validateLegalEntity(registration);
+            }
+            return "{\"rid\":"+rid +"}";
+        } catch (Exception e) {
+            log.error("ACTOR REGISTRATION ERROR: {}", e.getLocalizedMessage());
+            synchroHistoryService.failedPacket(actorDto.getSynchroBatchNumber(), actorDto.getSynchroPacketNumber());
+            throw new ApplicationException("ACTOR REGISTRATION ERROR: "+ e.getMessage());
         }
-        return "{\"rid\":"+rid +"}";
+
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -98,23 +107,19 @@ public class ActorService extends GenericService<AbstractActor, Long> {
     @Transactional(noRollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void failed(String rid, String message) {
         Registration registration = getRepository().getRegistrationByRid(rid);
-        RegistrationFailed failed = actorMapper.registrationToRegistrationFailed(registration);
-        failed.setRegistrationStatus(RegistrationStatus.FAILED);
-        failed.setStatusObservation(message);
-        getRepository().delete(registration);
-        create(failed);
-        synchroHistoryService.failedPacket(failed.getSynchroBatchNumber(), failed.getSynchroPacketNumber());
+        registration.setRegistrationStatus(RegistrationStatus.FAILED);
+        registration.setStatusObservation(message);
+        update(registration);
+        synchroHistoryService.failedPacket(registration.getSynchroBatchNumber(), registration.getSynchroPacketNumber());
     }
 
     @Transactional
     public void duplicate(String rid, String message) {
         Registration registration = getRepository().getRegistrationByRid(rid);
-        RegistrationDuplicated duplicated = actorMapper.registrationToRegistrationDuplicated(registration);
-        duplicated.setRegistrationStatus(RegistrationStatus.DUPLICATED);
-        duplicated.setStatusObservation(message);
-        getRepository().delete(registration);
-        create(duplicated);
-        synchroHistoryService.duplicatedPacket(duplicated.getSynchroBatchNumber(), duplicated.getSynchroPacketNumber());
+        registration.setRegistrationStatus(RegistrationStatus.DUPLICATED);
+        registration.setStatusObservation(message);
+        update(registration);
+        synchroHistoryService.duplicatedPacket(registration.getSynchroBatchNumber(), registration.getSynchroPacketNumber());
     }
 
     @Transactional
@@ -136,13 +141,17 @@ public class ActorService extends GenericService<AbstractActor, Long> {
 
     public Page<ActorProjection> getByStatus(RegistrationStatus status, Pageable pageable) {
         User user = userService.getCurrentUser();
+        List<RegistrationStatus> statusList = List.of(status);;
+        if (!RegistrationStatus.ACTOR.equals(status)) {
+            statusList = List.of(RegistrationStatus.PENDING, RegistrationStatus.QUEUED, RegistrationStatus.DUPLICATED, RegistrationStatus.FAILED, RegistrationStatus.IN_PROGRESS);
+        }
         if (user.is(ProfilConstant.LAND_AGENT_OPERATOR)) {
-            return getRepository().findByRegistrationStatusAndOperatorAgent(status, user.getUsername(), pageable);
+            return getRepository().findByRegistrationStatusInAndOperatorAgentOrderByIdDesc(statusList, user.getUsername(), pageable);
         }
 //        Page<AbstractActor> pageActor = getRepository().findByRegistrationStatusAndStateOrderByIdDesc(status, State.ENABLED, pageable);
 //        pageActor.getContent().forEach(AbstractActor::getAllOperations);
 //        return pageActor;
-        return getRepository().findByRegistrationStatus(status, pageable);
+        return getRepository().findByRegistrationStatusInOrderByIdDesc(statusList, pageable);
     }
 
     public List<ActorProjection> getByStatus(RegistrationStatus status) {
@@ -244,6 +253,10 @@ public class ActorService extends GenericService<AbstractActor, Long> {
 
     public void putInQueue()  {
 
+    }
+
+    public boolean existsByRid(String rid) {
+        return getRepository().existsByRidAndRegistrationStatusIn(rid, List.of(RegistrationStatus.PENDING, RegistrationStatus.QUEUED));
     }
 
     public ActorRepository getRepository() {
