@@ -95,11 +95,26 @@ public abstract class AbstractActor extends Auditable<String> {
             model.setName(this.physicalPerson.getFullName());
             model.setFirstname(this.physicalPerson.getFirstname());
             model.setLastname(this.physicalPerson.getLastname());
+            model.setContact(this.physicalPerson.getPrimaryPhone());
+            if (Objects.nonNull(this.physicalPerson.getIdentificationDoc())) {
+                model.setIdentificationDocType(this.physicalPerson.getIdentificationDoc().getIdentificationDocType());
+                model.setIdentificationDocNumber(this.physicalPerson.getIdentificationDoc().getIdentificationDocNumber());
+                model.setOtherIdentificationDocType(this.physicalPerson.getIdentificationDoc().getOtherIdentificationDocType());
+            }
+
         } else if (actorTypeIs(ActorType.INFORMAL_GROUP)) {
             model.setName(this.informalGroup.getGroupName());
+            model.setContact(this.informalGroup.getPhoneNumber());
         } else if (actorTypeIs(ActorType.PRIVATE_LEGAL_ENTITY)) {
             model.setName(this.privateLegalEntity.getCompanyName());
+            model.setContact(this.privateLegalEntity.getPhoneNumber());
+            if (Objects.nonNull(this.privateLegalEntity.getIdentificationDoc())) {
+                model.setIdentificationDocType(this.privateLegalEntity.getIdentificationDoc().getIdentificationDocType());
+                model.setIdentificationDocNumber(this.privateLegalEntity.getIdentificationDoc().getIdentificationDocNumber());
+                model.setOtherIdentificationDocType(this.privateLegalEntity.getIdentificationDoc().getOtherIdentificationDocType());
+            }
         } else {
+            model.setContact(this.publicLegalEntity.getPhoneNumber());
             model.setName(Objects.nonNull(this.publicLegalEntity.getName()) ? this.publicLegalEntity.getName() : this.privateLegalEntity.getEntityType().name());
         }
         return model;

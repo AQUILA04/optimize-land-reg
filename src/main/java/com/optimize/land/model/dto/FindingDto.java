@@ -3,6 +3,7 @@ package com.optimize.land.model.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.common.entities.annotations.ConditionalNotNull;
 import com.optimize.common.entities.exception.CustomValidationException;
+import com.optimize.land.model.enumeration.ActorType;
 import com.optimize.land.model.enumeration.RoleActor;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -21,8 +22,9 @@ public class FindingDto {
     private String commune;
     private String canton;
     private String locality;
-    private RoleActor personType;
+    private ActorType personType;
     private String uin;
+    @NotNull(message = "vous devez renseignez si la parcelle a un conflit ou pas !")
     private Boolean hasConflict;
     @Valid
     @NotNull(message = "Le checklist avant opération est obligatoire !")

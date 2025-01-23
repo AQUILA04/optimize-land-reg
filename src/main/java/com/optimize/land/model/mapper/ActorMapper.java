@@ -13,8 +13,10 @@ import java.util.Set;
 public interface ActorMapper {
 
     //@Mapping(target = "identificationDocPhoto", expression = "java(toImageBytes(personDto.getIdentificationDocPhoto()))")
+    @Mapping(target = "identificationDoc", expression = "java(toIdentificationDoc(personDto.getIdentificationDoc()))")
     Person toPerson(PersonDto personDto);
     //@Mapping(target = "identificationDocPhoto", expression = "java(toBase64String(person.getIdentificationDocPhoto()))")
+    @Mapping(target = "identificationDoc", expression = "java(toIdentificationDocDto(person.getIdentificationDoc()))")
     PersonDto toPersonDto(Person person);
 
     @Mapping(target = "mandatePhoto", expression = "java(toImageBytes(informalGroupDto.getMandatePhoto()))")
@@ -23,6 +25,7 @@ public interface ActorMapper {
     InformalGroupDto toInformalGroup(InformalGroup informalGroup);
 
 
+    //@Mapping(target = "identificationDoc", expression = "java(toIdentificationDoc())")
     PrivateLegalEntity toPrivateLegalEntity(PrivateLegalEntityDto privateLegalEntityDto);
     PrivateLegalEntityDto toPrivateLegalEntityDto(PrivateLegalEntity privateLegalEntity);
 

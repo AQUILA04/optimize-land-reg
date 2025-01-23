@@ -1,40 +1,56 @@
 package com.optimize.land.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.optimize.common.entities.annotations.Base64Image;
 import com.optimize.common.entities.annotations.ValidPhoneNumber;
+import com.optimize.land.model.entity.IdentificationDoc;
 import com.optimize.land.model.enumeration.PrivateEntityType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrivateLegalEntityDto {
     private Long id;
     private String uin;
-    @NotNull
+    @NotNull(message = "Le nom de la personne morale de droit privé est obligatoire !")
     private String companyName;
-    @NotNull
+    //@NotNull
     private String address;
-    @NotNull
-    @ValidPhoneNumber
+    //@NotNull
+    //@ValidPhoneNumber
     private String phoneNumber;
-    @ValidPhoneNumber
+    //@ValidPhoneNumber
     private String secondaryPhoneNumber;
     private String email;
     private PrivateEntityType entityType;
     private IdentificationDocDto identificationDoc;
-    @NotNull
+    //@NotNull
     private String mainActivity;
-    @NotNull
+    //@NotNull
     private String acronym;
-    @NotNull
+    //@NotNull
     private LocalDate companyCreatedDate;
-    @NotNull
+    //@NotNull
     private String representativeUIN;
-    @NotNull
+    //@NotNull
     private String representativeFullname;
     private String rid;
+
+    @JsonProperty(value = "identificationDoc")
+    public IdentificationDocDto getIdentificationDoc() {
+        if (Objects.nonNull(this.identificationDoc) && this.identificationDoc.isNull() ) {
+            return null;
+        }
+        return identificationDoc;
+    }
+
+    public boolean isNull() {
+        return !StringUtils.hasText(this.companyName);
+    }
 }

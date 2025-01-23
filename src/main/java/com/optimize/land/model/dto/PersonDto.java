@@ -1,7 +1,9 @@
 package com.optimize.land.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.optimize.common.entities.annotations.Base64Image;
 import com.optimize.common.entities.annotations.ValidPhoneNumber;
 import com.optimize.land.model.enumeration.MaritalStatus;
@@ -12,18 +14,23 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PersonDto {
     protected Long id;
     //@NotBlank(message = "actor.person.lastname.mandatory")
+    @NotBlank(message = "Le nom de l'acteur est obligatoire !")
     protected String lastname;
     //@NotBlank(message = "actor.person.firstname.mandatory")
+    @NotBlank(message = "Le prénom de l'acteur est obligatoire !")
     protected String firstname;
     //@NotNull(message = "actor.person.sex.mandatory")
+    @NotNull(message = "Le sexe de l'acteur est obligatoire !")
     protected Sex sex;
     //@NotNull(message = "actor.person.marital-status.mandatory")
     protected MaritalStatus maritalStatus;
@@ -41,7 +48,7 @@ public class PersonDto {
     //@NotBlank(message = "actor.person.address.mandatory")
     protected String address;
     //@NotBlank(message = "actor.person.primary-phone.mandatory")
-    @ValidPhoneNumber
+    //@ValidPhoneNumber
     protected String primaryPhone;
     //@ValidPhoneNumber
     protected String secondaryPhone;
@@ -62,4 +69,17 @@ public class PersonDto {
     protected String rid;
     protected String synchroBatchNumber;
     protected String synchroPacketNumber;
+
+    @JsonProperty(value = "identificationDoc")
+    public IdentificationDocDto getIdentificationDoc() {
+        if (Objects.nonNull(this.identificationDoc) && this.identificationDoc.isNull() ) {
+            return null;
+        }
+        return identificationDoc;
+    }
+
+    @JsonIgnore
+    public boolean isNull() {
+        return !StringUtils.hasText(this.firstname) && !StringUtils.hasText(this.lastname);
+    }
 }

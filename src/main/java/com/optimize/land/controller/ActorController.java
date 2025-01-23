@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("lang-reg/api/v1/actors")
+@RequestMapping("land-reg/api/v1/actors")
 public class ActorController extends BaseController<AbstractActor, Long> {
 
     public ActorController(CustomMessageSource messageSource, ActorService service) {

@@ -1,5 +1,6 @@
 package com.optimize.land.model.projection;
 
+import com.optimize.land.model.enumeration.ActorType;
 import com.optimize.land.model.enumeration.RoleActor;
 
 public interface FindingProjection {
@@ -10,7 +11,7 @@ public interface FindingProjection {
      String getCommune();
      String getCanton();
      String getLocality();
-     RoleActor getPersonType();
+     ActorType getPersonType();
      String getUin();
      Boolean getHasConflict();
 }

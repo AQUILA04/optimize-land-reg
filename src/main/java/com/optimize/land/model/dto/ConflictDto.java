@@ -3,7 +3,6 @@ package com.optimize.land.model.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.common.entities.annotations.Base64Image;
-import com.optimize.land.model.enumeration.ConflictParty;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -12,7 +11,7 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConflictDto {
     private Long id;
-    private ConflictParty conflictParty;
+    private String conflictParty;
     private String firstConflictPartyNUP;
     private Integer firstConflictPartyOccupationDurationInMonth;
     private String secondConflictPartyNUP;

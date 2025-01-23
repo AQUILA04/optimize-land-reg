@@ -43,7 +43,7 @@ public class OptimizeLandRegApplication {
             Access URLs:
             Local:        {}://localhost:{}
             Profile(s):   {}
-            (c) LangReg Powered by Optimize-tech. All rights reserved.
+            (c) LandReg Powered by Optimize-tech. All rights reserved.
             ----------------------------------------------------------
             """,
                 env.getProperty("spring.application.name"),

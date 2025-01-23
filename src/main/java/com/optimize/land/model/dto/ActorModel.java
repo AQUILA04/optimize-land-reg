@@ -12,4 +12,9 @@ public class ActorModel {
     private String lastname;
     private ActorType type;
     private RoleActor role;
+    private String contact;
+    protected String identificationDocType;
+    protected String otherIdentificationDocType;
+    protected String identificationDocNumber;
+
 }

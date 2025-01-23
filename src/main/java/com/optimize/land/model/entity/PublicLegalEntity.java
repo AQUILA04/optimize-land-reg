@@ -37,8 +37,8 @@ public class PublicLegalEntity extends BaseEntity<String> {
     @Enumerated(EnumType.STRING)
     @Column(name = "public_entity_type", nullable = false)
     private PublicEntityType publicEntityType;
-    @NotBlank
-    @ValidPhoneNumber
+    //@NotBlank(message = "Le numéro de la personnalité du droit publique est obligatoire !!!")
+    //@ValidPhoneNumber(message = "Le numéro de la personnalité du droit public n'est pas valide !")
     private String phoneNumber;
     private String name;
 

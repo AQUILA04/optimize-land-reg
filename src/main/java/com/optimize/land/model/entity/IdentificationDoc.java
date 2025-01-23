@@ -1,12 +1,16 @@
 package com.optimize.land.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.optimize.common.entities.annotations.NonEmptyByteArray;
 import com.optimize.common.entities.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
+
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -40,4 +44,11 @@ public class IdentificationDoc extends BaseEntity<String> {
     @OneToOne(mappedBy = "identificationDoc")
     @JsonBackReference
     protected PrivateLegalEntity privateLegalEntity;
+
+    @JsonIgnore
+    public boolean isNull() {
+        return !StringUtils.hasText(identificationDocNumber)  &&
+                !StringUtils.hasText(identificationDocType) &&
+                Objects.isNull(identificationDocPhoto);
+    }
 }

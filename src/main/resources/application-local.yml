@@ -46,6 +46,10 @@ server:
     enabled: false
 
 security:
+  licence:
+    prod:
+      active: 1
+      society: "Optimize"
   config:
     profiles: ADMIN,USER,LAND_AGENT
     permissions: ROLE_ADMIN,ROLE_USER,ROLE_LAND_AGENT

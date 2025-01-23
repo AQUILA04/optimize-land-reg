@@ -3,7 +3,6 @@ package com.optimize.land.model.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.optimize.common.entities.entity.Auditable;
-import com.optimize.land.model.enumeration.ConflictParty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,8 +16,7 @@ public class Conflict extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private ConflictParty conflictParty;
+    private String conflictParty;
     private String firstConflictPartyNUP;
     private String firstConflictPartyOccupationDurationInMonth;
     private String secondConflictPartyNUP;

@@ -1,9 +1,13 @@
 package com.optimize.land.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.optimize.common.entities.annotations.Base64Image;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.springframework.util.StringUtils;
+
+import java.util.Objects;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,4 +22,11 @@ public class IdentificationDocDto {
     @Base64Image
     protected String identificationDocPhoto;
     protected String identificationDocPhotoContentType;
+
+    @JsonIgnore
+    public boolean isNull() {
+        return !StringUtils.hasText(identificationDocNumber)  &&
+                !StringUtils.hasText(identificationDocType) &&
+                Objects.isNull(identificationDocPhoto);
+    }
 }

@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("lang-reg/api/v1/synchro-histories")
+@RequestMapping("land-reg/api/v1/synchro-histories")
 public class SynchroHistoryController extends BaseController<SynchroHistory, Long> {
 
     public SynchroHistoryController(CustomMessageSource messageSource,

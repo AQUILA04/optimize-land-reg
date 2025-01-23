@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("lang-reg/api/v1/constatations")
+@RequestMapping("land-reg/api/v1/constatations")
 public class FindingController extends BaseController<Finding, Long> {
     public FindingController(CustomMessageSource messageSource,
                              FindingService service) {

@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -70,6 +71,13 @@ public class CheckListOperation extends BaseEntity<String> {
     private String socialLandAgentUIN;
     private String tiersUIN;
     private String tiersRole;
+
+    @PrePersist
+    public void setUp() {
+        if (Objects.nonNull(borderingList)) {
+            this.borderingList.forEach(bordering -> bordering.setCheckListOperation(this));
+        }
+    }
 
 
     @Override

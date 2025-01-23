@@ -1,6 +1,7 @@
 package com.optimize.land.service;
 
 import com.optimize.common.entities.enums.State;
+import com.optimize.common.entities.exception.ApplicationException;
 import com.optimize.common.entities.repository.GenericRepository;
 import com.optimize.common.entities.service.GenericService;
 import com.optimize.common.securities.models.User;
@@ -41,13 +42,19 @@ public class FindingService extends GenericService<Finding, Long> {
     @Transactional
     public Long register(@NotNull FindingDto findingDto) {
         this.synchroHistoryService.receivedPacket(findingDto.getSynchroBatchNumber(), findingDto.getSynchroPacketNumber(), SynchroType.FINDING);
-        findingDto.validateFirstAndLastCheckListOperations();
-        Finding finding = findingMapper.toEntity(findingDto);
-        this.checkListOperationService.create(finding.getFirstCheckListOperation());
-        this.checkListOperationService.create(finding.getLastCheckListOperation());
-        finding.setOperatorAgent(userService.getCurrentUser().getUsername());
-        create(finding);
-        return finding.getId();
+        try {
+            //findingDto.validateFirstAndLastCheckListOperations();
+            Finding finding = findingMapper.toEntity(findingDto);
+            this.checkListOperationService.create(finding.getFirstCheckListOperation());
+            this.checkListOperationService.create(finding.getLastCheckListOperation());
+            finding.setOperatorAgent(userService.getCurrentUser().getUsername());
+            create(finding);
+            return finding.getId();
+        } catch (Exception e) {
+            this.synchroHistoryService.failedPacket(findingDto.getSynchroBatchNumber(), findingDto.getSynchroPacketNumber());
+            throw new ApplicationException("Une Erreur S'est produite lors de l'enregistrement de la constatation: ", e.getMessage());
+        }
+
     }
 
     public Page<FindingProjection> getAllToProjection(Pageable pageable) {

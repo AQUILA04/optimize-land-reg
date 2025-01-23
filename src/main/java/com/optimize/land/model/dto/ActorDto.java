@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -55,5 +56,33 @@ public class ActorDto {
         } else if (publicLegalEntity != null) {
             type = ActorType.PUBLIC_LEGAL_ENTITY;
         }
+    }
+
+    public PersonDto getPhysicalPerson() {
+        if (Objects.nonNull(physicalPerson) && physicalPerson.isNull()) {
+            return null;
+        }
+        return physicalPerson;
+    }
+
+    public InformalGroupDto getInformalGroup() {
+        if (Objects.nonNull(informalGroup) && informalGroup.isNull()) {
+            return null;
+        }
+        return informalGroup;
+    }
+
+    public PrivateLegalEntityDto getPrivateLegalEntity() {
+        if (Objects.nonNull(privateLegalEntity) && privateLegalEntity.isNull()) {
+            return null;
+        }
+        return privateLegalEntity;
+    }
+
+    public PublicLegalEntityDto getPublicLegalEntity() {
+        if (Objects.nonNull(publicLegalEntity) && publicLegalEntity.isNull()) {
+            return null;
+        }
+        return publicLegalEntity;
     }
 }
