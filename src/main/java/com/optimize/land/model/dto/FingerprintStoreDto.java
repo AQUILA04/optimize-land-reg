@@ -7,10 +7,8 @@ import com.optimize.land.model.enumeration.Finger;
 import com.optimize.land.model.enumeration.HandType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.Locale;
 import java.util.Objects;
 
 @Data
@@ -59,5 +57,9 @@ public class FingerprintStoreDto {
             }
         }
         return this.handType;
+    }
+
+    public boolean isNull() {
+        return Objects.isNull(fingerprintImage);
     }
 }

@@ -29,7 +29,6 @@ public class ActorDto {
     protected RoleActor role;
     protected ActorType type;
     @Valid
-    @Size(min = 3, max =3)
     protected Set<FingerprintStoreDto> fingerprintStores;
 
     public void validateUniqueActorType () {
@@ -84,5 +83,14 @@ public class ActorDto {
             return null;
         }
         return publicLegalEntity;
+    }
+
+    public Set<FingerprintStoreDto> getFingerprintStores() {
+        if (fingerprintStores != null) {
+            boolean allAttributesNull = fingerprintStores.stream()
+                    .allMatch(store -> store != null && store.isNull());
+            return allAttributesNull ? null : fingerprintStores;
+        }
+        return null;
     }
 }

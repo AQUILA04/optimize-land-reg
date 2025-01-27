@@ -48,6 +48,7 @@ public class Finding extends Auditable<String> {
     @Valid
     @OneToOne(cascade = CascadeType.ALL)
     private Conflict conflict;
+    private String surface;
     private String synchroBatchNumber;
     private String synchroPacketNumber;
     private String operatorAgent;

@@ -32,6 +32,7 @@ public class FindingDto {
     @Valid
     @NotNull(message = "Le checklist après opération est obligatoire !")
     private CheckListOperationDto lastCheckListOperation;
+    private String surface;
     private ConflictDto conflict;
     private String synchroBatchNumber;
     private String synchroPacketNumber;

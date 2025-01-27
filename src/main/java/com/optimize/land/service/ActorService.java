@@ -69,6 +69,7 @@ public class ActorService extends GenericService<AbstractActor, Long> {
             actorDto.validateUniqueActorType();
             Registration registration = actorMapper.toRegistration(actorDto);
             registration.validateUniqueActorType();
+            registration.fingerprintMandatoryCheck();
             final String rid = UniqueIDGenerator.generateRID();
             registration.addRid(rid);
             registration.setOperatorAgent(userService.getCurrentUser().getUsername());
@@ -194,7 +195,9 @@ public class ActorService extends GenericService<AbstractActor, Long> {
     @Transactional
     public void validateLegalEntity(Registration registration) {
         //TODO: gérer ça avec un event
-        afisClient.sendLegalEntityFingerprint(registration.getFingerprintStores());
+        if (Objects.nonNull(registration.getFingerprintStores()) && registration.getFingerprintStores().size() > 2) {
+            afisClient.sendLegalEntityFingerprint(registration.getFingerprintStores());
+        }
         validate(registration.getRid());
     }
 

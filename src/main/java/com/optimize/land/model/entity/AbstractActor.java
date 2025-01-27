@@ -96,6 +96,8 @@ public abstract class AbstractActor extends Auditable<String> {
             model.setFirstname(this.physicalPerson.getFirstname());
             model.setLastname(this.physicalPerson.getLastname());
             model.setContact(this.physicalPerson.getPrimaryPhone());
+            model.setAddress(this.physicalPerson.getAddress());
+            model.setEmail(this.physicalPerson.getEmail());
             if (Objects.nonNull(this.physicalPerson.getIdentificationDoc())) {
                 model.setIdentificationDocType(this.physicalPerson.getIdentificationDoc().getIdentificationDocType());
                 model.setIdentificationDocNumber(this.physicalPerson.getIdentificationDoc().getIdentificationDocNumber());
@@ -105,9 +107,12 @@ public abstract class AbstractActor extends Auditable<String> {
         } else if (actorTypeIs(ActorType.INFORMAL_GROUP)) {
             model.setName(this.informalGroup.getGroupName());
             model.setContact(this.informalGroup.getPhoneNumber());
+            model.setEmail(this.informalGroup.getEmail());
         } else if (actorTypeIs(ActorType.PRIVATE_LEGAL_ENTITY)) {
             model.setName(this.privateLegalEntity.getCompanyName());
             model.setContact(this.privateLegalEntity.getPhoneNumber());
+            model.setAddress(this.privateLegalEntity.getAddress());
+            model.setEmail(this.privateLegalEntity.getEmail());
             if (Objects.nonNull(this.privateLegalEntity.getIdentificationDoc())) {
                 model.setIdentificationDocType(this.privateLegalEntity.getIdentificationDoc().getIdentificationDocType());
                 model.setIdentificationDocNumber(this.privateLegalEntity.getIdentificationDoc().getIdentificationDocNumber());
@@ -130,5 +135,11 @@ public abstract class AbstractActor extends Auditable<String> {
         this.physicalPerson = null;
         this.privateLegalEntity = null;
         this.publicLegalEntity = null;
+    }
+
+    public void fingerprintMandatoryCheck() {
+        if (actorTypeIs(ActorType.PHYSICAL_PERSON) && Objects.isNull(this.fingerprintStores)) {
+            throw new CustomValidationException("Les données d'empreintes digitales sont obligatoires pour une personne physique !");
+        }
     }
 }

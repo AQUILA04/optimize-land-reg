@@ -16,5 +16,7 @@ public class ActorModel {
     protected String identificationDocType;
     protected String otherIdentificationDocType;
     protected String identificationDocNumber;
+    private String address;
+    private String email;
 
 }
