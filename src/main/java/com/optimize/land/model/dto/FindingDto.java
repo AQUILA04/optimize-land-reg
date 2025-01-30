@@ -36,6 +36,7 @@ public class FindingDto {
     private ConflictDto conflict;
     private String synchroBatchNumber;
     private String synchroPacketNumber;
+    private String landForm;
 
     public void validateFirstAndLastCheckListOperations() {
         if (!this.firstCheckListOperation.equals(this.lastCheckListOperation)) {

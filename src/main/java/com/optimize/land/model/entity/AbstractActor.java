@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -65,7 +66,7 @@ public abstract class AbstractActor extends Auditable<String> {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "actor")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonManagedReference
-    protected Set<FingerprintStore> fingerprintStores;
+    protected Set<FingerprintStore> fingerprintStores = new HashSet<>();
 
     public void validateUniqueActorType () {
             if (Objects.nonNull(physicalPerson) &&
@@ -82,7 +83,10 @@ public abstract class AbstractActor extends Auditable<String> {
     public void addRid(String rid) {
         this.rid = rid;
         this.registrationStatus = RegistrationStatus.PENDING;
-        fingerprintStores.forEach(fs -> fs.setRid(rid));
+        if (Objects.nonNull(fingerprintStores)) {
+            fingerprintStores.forEach(fs -> fs.setRid(rid));
+        }
+
     }
 
     @JsonIgnore

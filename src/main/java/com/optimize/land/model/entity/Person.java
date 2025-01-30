@@ -95,17 +95,17 @@ public class Person extends Auditable<String> {
 
     //@NotNull
     //@Size(min = 8, max = 11)
-    @Column(name = "primary_phone", length = 11, unique = true)
+    @Column(name = "primary_phone", length = 11)
     //@ValidPhoneNumber
     protected String primaryPhone;
 
     //@Size(min = 8, max = 11)
-    @Column(name = "secondary_phone", length = 11, unique = true)
+    @Column(name = "secondary_phone", length = 11)
     //@ValidPhoneNumber
     protected String secondaryPhone;
 
     //@NotNull
-    @Column(name = "email", unique = true)
+    @Column(name = "email")
     @Email
     //@DependentField
     protected String email;

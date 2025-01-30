@@ -10,10 +10,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
+@ToString
 @ConditionalNotNull(
         booleanField = "hasConflict",
         dependentField = "conflict",
@@ -49,6 +51,7 @@ public class Finding extends Auditable<String> {
     @OneToOne(cascade = CascadeType.ALL)
     private Conflict conflict;
     private String surface;
+    private String landForm;
     private String synchroBatchNumber;
     private String synchroPacketNumber;
     private String operatorAgent;

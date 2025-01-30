@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -89,8 +90,8 @@ public class ActorDto {
         if (fingerprintStores != null) {
             boolean allAttributesNull = fingerprintStores.stream()
                     .allMatch(store -> store != null && store.isNull());
-            return allAttributesNull ? null : fingerprintStores;
+            return allAttributesNull ? new HashSet<>() : fingerprintStores;
         }
-        return null;
+        return new HashSet<>();
     }
 }
