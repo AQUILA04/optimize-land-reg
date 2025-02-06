@@ -62,10 +62,11 @@ public class ActorService extends GenericService<AbstractActor, Long> {
     }
 
     @Transactional
-    public String register(@NotNull ActorDto actorDto) throws JsonProcessingException {
+    public synchronized String register(@NotNull ActorDto actorDto) throws JsonProcessingException {
         synchroHistoryService.receivedPacket(actorDto.getSynchroBatchNumber(),
                 actorDto.getSynchroPacketNumber(), SynchroType.ACTOR);
         try {
+            actorDto.setId(null);
             actorDto.validateUniqueActorType();
             Registration registration = actorMapper.toRegistration(actorDto);
             registration.validateUniqueActorType();
@@ -89,6 +90,7 @@ public class ActorService extends GenericService<AbstractActor, Long> {
             }
             return "{\"rid\":"+rid +"}";
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("ACTOR REGISTRATION ERROR: {}", e.getLocalizedMessage());
             synchroHistoryService.failedPacket(actorDto.getSynchroBatchNumber(), actorDto.getSynchroPacketNumber());
             throw new ApplicationException("ACTOR REGISTRATION ERROR: "+ e.getMessage());
@@ -222,20 +224,30 @@ public class ActorService extends GenericService<AbstractActor, Long> {
     }
 
     @Transactional
-    public String updateActor(ActorDto actorDto, Long id) {
-        actorDto.setId(id);
-        Registration registration = actorMapper.toRegistration(actorDto);
-        Actor actor = actorMapper.registrationToActor(registration);
-        updateFingerprint(actor.getFingerprintStores());
-        updateIdentificationDoc(actor);
-        update(actor);
-        return "updated:success";
+    public synchronized String updateActor(ActorDto actorDto, Long id) {
+        try {
+            actorDto.setId(id);
+            Registration registration = actorMapper.toRegistration(actorDto);
+            Actor actor = actorMapper.registrationToActor(registration);
+            updateFingerprint(actor);
+            updateIdentificationDoc(actor);
+            actor.setRegistrationStatus(RegistrationStatus.ACTOR);
+            Actor old = (Actor) getById(id);
+            actor.setRid(old.getRid());
+            actor.setFingerprintStores(fingerprintStoreService.getRepository().findByRid(old.getRid()));
+            update(actor);
+            return "updated:success";
+        }catch (Exception e) {
+            log.error("ACTOR UPDATE ERROR: {}", e.getLocalizedMessage());
+            throw new ApplicationException("ACTOR UPDATE ERROR: "+ e.getMessage());
+        }
     }
 
-    public void updateFingerprint(Set<FingerprintStore> fingerprintStores) {
-        if (Objects.nonNull(fingerprintStores)) {
+    public void updateFingerprint(Actor actor) {
+        if (Objects.nonNull(actor.getFingerprintStores()) && !actor.getFingerprintStores().isEmpty()) {
             throw new ApplicationException("Fingerprint update is not supported yet !!!");
         }
+        //actor.setFingerprintStores(fingerprintStoreService.getRepository().findByRid(actor.getRid()));
     }
 
     public void updateIdentificationDoc(Actor actor) {
@@ -266,6 +278,15 @@ public class ActorService extends GenericService<AbstractActor, Long> {
 
     public ActorRepository getRepository() {
         return (ActorRepository) repository;
+    }
+
+    @Override
+    public AbstractActor getById(Long id) {
+        AbstractActor actor = super.getById(id);
+        if (actor.actorTypeIs(ActorType.PHYSICAL_PERSON)) {
+            actor.setFingerprintStores(fingerprintStoreService.getByRid(actor.getRid()));
+        }
+        return actor;
     }
 
     @Autowired

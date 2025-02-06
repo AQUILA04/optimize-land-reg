@@ -64,7 +64,7 @@ public abstract class AbstractActor extends Auditable<String> {
     protected ActorType type;
     private String operatorAgent;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "actor")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonManagedReference
     protected Set<FingerprintStore> fingerprintStores = new HashSet<>();
 

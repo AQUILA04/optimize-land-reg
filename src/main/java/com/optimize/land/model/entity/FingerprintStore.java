@@ -38,12 +38,13 @@ public class FingerprintStore extends BaseEntity<String> {
 
     @Column(name = "fingerprint_image")
     @Basic(fetch = FetchType.LAZY)
-    @NonEmptyByteArray
+    //@NonEmptyByteArray
     //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private byte[] fingerprintImage;
 
     @Column(name = "fingerprint_image_content_type")
     private String fingerprintImageContentType;
+    private String fingerStr;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JsonBackReference
